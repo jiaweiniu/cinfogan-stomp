@@ -2,14 +2,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Import the data from the dataset and apply a normalization
-def import_data(n_data, x_dim, xi_dim):
+def import_data(dataset_path,n_data, x_dim, xi_dim):
     number_of_parameters=x_dim+xi_dim
-
-    dataset_type="rrtconnect"
     dataset=np.zeros((n_data,number_of_parameters))
 
     for m in range(n_data):
-        f=open("../dataset_generator/dataset/random_left_right/"+dataset_type+"/path_"+str(m+1)+".dat",'r')
+        f=open(dataset_path+"/path_"+str(m+1)+".dat",'r')
 
         # x
         x=np.zeros(12)

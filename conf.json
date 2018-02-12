@@ -4,5 +4,6 @@
     "n_batchsize": 250,
     "n_neurons": 100,
     "n_noisedim": 20,
-    "output_name": "yo"
+    "dataset_path": "../dataset_generator/dataset/random_left_right/rrtconnect",
+    "output_name": "12-2-2018"
 }

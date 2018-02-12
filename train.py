@@ -43,13 +43,14 @@ if __name__ == '__main__':
     x_dim=12
     xi_dim=6
 
-    train = import_dataset.import_data(configuration["n_data"], x_dim, xi_dim)    
+    train = import_dataset.import_data(configuration["dataset_path"],
+                                       configuration["n_data"], x_dim, xi_dim)    
     train_iter = iterators.SerialIterator(train, batch_size)
     z_iter = iterators.RandomNoiseIterator(UniformNoiseGenerator(-1, 1, noise_dim), batch_size)
 
+    # Creating the Neural Networks models
     gen=Generator(x_dim, xi_dim, noise_dim)
     dis=Discriminator(x_dim, xi_dim)
-    # To be able to clamp we need to initialize at least once the critic
     critic=Critic(x_dim, xi_dim)
     
     if args.wasserstein:
