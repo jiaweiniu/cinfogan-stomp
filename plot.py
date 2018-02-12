@@ -13,7 +13,7 @@ measure_lin=[]
 measure_cgan=[]
 n_lines=0
 
-with open("results.dat",'r') as f:
+with open("results/f1_metric.dat",'r') as f:
     for i, l in enumerate(f):
         str_tmp=str.split(l.strip())
         ratio_lin.append(float(str_tmp[0]))

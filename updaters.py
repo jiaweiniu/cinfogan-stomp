@@ -74,7 +74,7 @@ class GANUpdater(training.StandardUpdater):
                 result=testing_model.test(self.generator,1000,self.noise_dim)
                 reporter.report({'lin_ratio': result[0]})
                 reporter.report({'cgan_ratio': result[2]})
-                f=open('results.dat','a')
+                f=open('results/f1_metric.dat','a')
                 f.write(str(result[0])+" "+str(result[1])+" "+str(result[2])+" "+str(result[3])+"\n")
                 f.close()
                 self.epoch_counter=0
