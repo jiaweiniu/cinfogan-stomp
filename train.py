@@ -1,3 +1,6 @@
+import os
+import json
+import ast
 import argparse
 from chainer import Variable,datasets, training, iterators, optimizers, serializers
 from chainer.training import updater, extensions
@@ -25,17 +28,22 @@ def parse_args():
 
 
 if __name__ == '__main__':
+    with open(os.path.join("conf.json")) as fd:
+        json_data = json.load(fd)
+    configuration=ast.literal_eval(json.dumps(json_data))
+    
+    nz = configuration["n_neurons"]
+    batch_size = configuration["n_batchsize"]
+    epochs = configuration["n_epochs"]
+    noise_dim = configuration["n_noisedim"]
+    
     args = parse_args()
-    nz = args.nz
-    batch_size = args.batch_size
-    epochs = args.epochs
     gpu = args.gpu
-    noise_dim = args.noisedim 
     
     x_dim=12
     xi_dim=6
 
-    train = import_dataset.import_data(1000, x_dim, xi_dim)    
+    train = import_dataset.import_data(configuration["n_data"], x_dim, xi_dim)    
     train_iter = iterators.SerialIterator(train, batch_size)
     z_iter = iterators.RandomNoiseIterator(UniformNoiseGenerator(-1, 1, noise_dim), batch_size)
 
@@ -84,6 +92,7 @@ if __name__ == '__main__':
         )
 
     trainer = training.Trainer(updater, stop_trigger=(epochs, 'epoch'))
+    trainer.out="results" # changing the name because we do multiple experiments
     trainer.extend(extensions.LogReport())
 
     

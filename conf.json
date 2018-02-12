@@ -1,0 +1,8 @@
+{
+    "n_data": 1000,
+    "n_epochs": 25,
+    "n_batchsize": 250,
+    "n_neurons": 100,
+    "n_noisedim": 20,
+    "output_name": "yo"
+}
