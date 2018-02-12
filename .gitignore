@@ -1,0 +1,9 @@
+bin/*
+dataset/*
+include/*
+lib/*
+local/*
+man/*
+results/*
+pip-selfcheck.json
+*pyc
