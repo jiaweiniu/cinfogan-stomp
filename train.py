@@ -98,9 +98,11 @@ if __name__ == '__main__':
 
     
     if args.wasserstein:        
-        print_report_args = ['epoch', 'gen/loss', 'cri/loss','lin_ratio','cgan_ratio']
+        print_report_args = ['epoch', 'gen/loss', 'cri/loss',
+                             'lin_ratio','cgan_ratio','diff_ratio']
     else:
-        print_report_args = ['epoch', 'gen/loss', 'dis/loss','lin_ratio','cgan_ratio']
+        print_report_args = ['epoch', 'gen/loss', 'dis/loss',
+                             'lin_ratio','cgan_ratio','diff_ratio']
 
     trainer.extend(extensions.PrintReport(print_report_args))
     trainer.extend(extensions.ProgressBar())

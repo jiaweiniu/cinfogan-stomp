@@ -71,7 +71,8 @@ def collisions_measure(x_list,xi_list):
         measure_cgan_col.append(measure_cgan)
 
     return [100*np.mean(ratio_lin_col),np.mean(measure_lin_col),
-            100*np.mean(ratio_cgan_col),np.mean(measure_cgan_col)]
+            100*np.mean(ratio_cgan_col),np.mean(measure_cgan_col),
+            100*(np.mean(ratio_lin_col)-np.mean(ratio_cgan_col))]
             
 def test(gen,n_tests,noise_dim):
     z = np.random.uniform(0, 1, (n_tests, noise_dim))
