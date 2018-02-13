@@ -106,7 +106,11 @@ if __name__ == '__main__':
     trainer.extend(extensions.ProgressBar())
     trainer.extend(extensions.GeneratorSample(x_dim,xi_dim,noise_dim), trigger=(1, 'epoch'))
     trainer.run()
-    serializers.save_npz('results/cgan_gen.model',gen)
-    serializers.save_npz('results/cgan_dis.model',dis)
-    serializers.save_npz('results/cgan_cri.model',gen)
+
+    # Saving the models
+    serializers.save_npz("results/models/"+configuration["output_name"]+"_gen.model",gen)
+    if args.wasserstein:
+        serializers.save_npz("results/models/"+configuration["output_name"]+"_cri.model",cri)
+    else:
+        serializers.save_npz("results/models/"+configuration["output_name"]+"_dis.model",dis)
     
