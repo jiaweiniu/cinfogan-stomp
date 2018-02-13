@@ -10,12 +10,12 @@ def import_data(dataset_path,n_data, x_dim, xi_dim):
         f=open(dataset_path+"/path_"+str(m+1)+".dat",'r')
 
         # x
-        x=np.zeros(12)
+        x=np.zeros(x_dim)
         str_tmp=str.split(f.readline().strip())        
         for i in range(x_dim):
             x[i]=float(str_tmp[i])
-        x=normalize_data(x)
-        dataset[m,:12]=x
+        x=normalize_data_random_left_right(x)
+        dataset[m,:x_dim]=x
         
         # xi
         str_tmp=str.split(f.readline().strip())
@@ -26,7 +26,14 @@ def import_data(dataset_path,n_data, x_dim, xi_dim):
     return dataset
 
 
+
 def normalize_data(x):
+    return x
+
+def denormalize_data(x):
+    return x
+
+def normalize_data_random_left_right(x):
     x[0]=(x[0]-0.02)/(0.15-0.02)
     x[1]=(x[1]-0.02)/(0.98-0.02)
     x[2]=(x[2]-0.85)/(0.98-0.85)
@@ -42,7 +49,7 @@ def normalize_data(x):
 
     return x
 
-def denormalize_data(x):
+def denormalize_data_random_left_right(x):
     x[0]=x[0]*(0.15-0.02)+0.02
     x[1]=x[1]*(0.98-0.02)+0.02
     x[2]=x[2]*(0.98-0.85)+0.85

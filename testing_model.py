@@ -18,7 +18,7 @@ def collisions_measure(x_list,xi_list):
         t=np.linspace(0,1,100)
         t=np.asarray([t])
 
-        x=import_dataset.denormalize_data(x)
+        x=import_dataset.denormalize_data_random_left_right(x)
         start=np.asarray([x[0:2]])
         goal=np.asarray([x[2:4]])
         
@@ -70,19 +70,6 @@ def collisions_measure(x_list,xi_list):
             ratio_cgan_col.append(0)
         measure_cgan_col.append(measure_cgan)
 
-    """
-    print "Linear "
-    print
-    print "measure mean : "+str(np.mean(measure_lin_col))
-    print "collision percentage : "+str(np.mean(ratio_lin_col))
-
-    print
-    print
-
-    print "CGAN"
-    print "measure mean : "+str(np.mean(measure_cgan_col))
-    print "collision percentage : "+str(np.mean(ratio_cgan_col))
-    """
     return [100*np.mean(ratio_lin_col),np.mean(measure_lin_col),
             100*np.mean(ratio_cgan_col),np.mean(measure_cgan_col)]
             
