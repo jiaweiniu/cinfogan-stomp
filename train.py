@@ -117,10 +117,15 @@ if __name__ == '__main__':
 
     trainer.run()
 
-    # Saving the models
-    serializers.save_npz("results/models/"+configuration["output_name"]+"_gen.model",gen)
-    if args.wasserstein:
-        serializers.save_npz("results/models/"+configuration["output_name"]+"_cri.model",cri)
+    if configuration["output_name"] != "":
+        output_name=configuration["output_name"]
     else:
-        serializers.save_npz("results/models/"+configuration["output_name"]+"_dis.model",dis)
+        output_name=str(configuration["experiment"])
+
+    # Saving the models
+    serializers.save_npz("results/models/"+output_name+"_gen.model",gen)
+    if args.wasserstein:
+        serializers.save_npz("results/models/"+output_name+"_cri.model",cri)
+    else:
+        serializers.save_npz("results/models/"+output_name+"_dis.model",dis)
     

@@ -1,9 +1,10 @@
 {
-    "n_data": 1000,
-    "n_epochs": 25,
+    "experiment": "random_left_right",
+    "n_data": 10000,
+    "n_epochs": 4,
     "n_batchsize": 250,
     "n_neurons": 100,
-    "n_noisedim": 20,
+    "n_noisedim": 30,
     "dataset_path": "../dataset_generator/dataset/random_left_right/rrtconnect",
-    "output_name": "12-2-2018"
+    "output_name": ""
 }
