@@ -8,12 +8,14 @@ import import_dataset
 import matplotlib.patches as patches
 
 class GeneratorSample(extension.Extension):
-    def __init__(self, x_dim, xi_dim, noise_dim, dirname='samples', sample_format='png'):
+    def __init__(self, dataset_path, x_dim, xi_dim,
+                 noise_dim, dirname='samples', sample_format='png'):
         self._dirname = dirname
         self._sample_format = sample_format
         self.noise_dim=noise_dim
         self.x_dim=x_dim
         self.xi_dim=xi_dim
+        self.dataset_path=dataset_path
         
     def __call__(self, trainer):
         dirname = os.path.join(trainer.out, self._dirname)
@@ -21,7 +23,7 @@ class GeneratorSample(extension.Extension):
             n_gen=1
             z=Variable(np.random.uniform(-1,1,(n_gen,self.noise_dim)).astype(np.float32))
 
-            dataset=import_dataset.import_data(3,self.x_dim,self.xi_dim)
+            dataset=import_dataset.import_data(self.dataset_path,3,self.x_dim,self.xi_dim)
             x=Variable(dataset[1:2,:self.x_dim])
 
             xi_gen = trainer.updater.generator(z,x).data[0]
@@ -29,7 +31,7 @@ class GeneratorSample(extension.Extension):
             fig,ax = plt.subplots(1)
             
             x=x.data[0]
-            x=import_dataset.denormalize_data(x)
+            x=import_dataset.denormalize_data_random_left_right(x)
             
             start=[x[0],x[1]]
             goal=[x[2],x[3]]

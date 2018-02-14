@@ -106,7 +106,8 @@ if __name__ == '__main__':
 
     trainer.extend(extensions.PrintReport(print_report_args))
     trainer.extend(extensions.ProgressBar())
-    trainer.extend(extensions.GeneratorSample(x_dim,xi_dim,noise_dim), trigger=(1, 'epoch'))
+    trainer.extend(extensions.GeneratorSample(configuration["dataset_path"], x_dim,
+                                              xi_dim,noise_dim), trigger=(1, 'epoch'))
     trainer.run()
 
     # Saving the models
