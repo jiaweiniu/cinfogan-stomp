@@ -17,9 +17,7 @@ with open("results/f1_metric.dat",'r') as f:
     for i, l in enumerate(f):
         str_tmp=str.split(l.strip())
         ratio_lin.append(float(str_tmp[0]))
-        measure_lin.append(float(str_tmp[1]))
-        ratio_cgan.append(float(str_tmp[2]))
-        measure_cgan.append(float(str_tmp[3]))
+        ratio_cgan.append(float(str_tmp[1]))
     n_lines=i+1
 
     

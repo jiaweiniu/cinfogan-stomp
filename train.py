@@ -108,6 +108,13 @@ if __name__ == '__main__':
     trainer.extend(extensions.ProgressBar())
     trainer.extend(extensions.GeneratorSample(configuration["dataset_path"], x_dim,
                                               xi_dim,noise_dim), trigger=(1, 'epoch'))
+
+
+    # We delete the f1_metric.dat file to be sure we do not mixed multiple experiment data.
+    cmd = "touch results/f1_metric.dat && rm results/f1_metric.dat"
+    os.system(cmd)
+
+
     trainer.run()
 
     # Saving the models
