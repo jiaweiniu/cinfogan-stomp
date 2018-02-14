@@ -32,19 +32,23 @@ if __name__ == '__main__':
         json_data = json.load(fd)
     configuration=ast.literal_eval(json.dumps(json_data))
     
-    nz = configuration["n_neurons"]
+    nz         = configuration["n_neurons"]
     batch_size = configuration["n_batchsize"]
-    epochs = configuration["n_epochs"]
-    noise_dim = configuration["n_noisedim"]
+    epochs     = configuration["n_epochs"]
+    noise_dim  = configuration["n_noisedim"]
+    experiment = configuration["experiment"]
     
     args = parse_args()
     gpu = args.gpu
-    
-    x_dim=12
-    xi_dim=6
 
-    train = import_dataset.import_data(configuration["dataset_path"],
-                                       configuration["n_data"], x_dim, xi_dim)    
+    if experiment == "random_left_right":
+        x_dim=12
+        xi_dim=6
+    else:
+        x_dim=14
+        xi_dim=7
+
+    train = import_dataset.import_data(configuration, x_dim, xi_dim)    
     train_iter = iterators.SerialIterator(train, batch_size)
     z_iter = iterators.RandomNoiseIterator(UniformNoiseGenerator(-1, 1, noise_dim), batch_size)
 
@@ -87,6 +91,7 @@ if __name__ == '__main__':
             noise_dim=noise_dim,
             x_dim=x_dim,
             xi_dim=xi_dim,
+            experiment=configuration["experiment"],
             optimizer_generator=optimizer_generator,
             optimizer_discriminator=optimizer_discriminator,
             device=gpu,
@@ -106,8 +111,9 @@ if __name__ == '__main__':
 
     trainer.extend(extensions.PrintReport(print_report_args))
     trainer.extend(extensions.ProgressBar())
-    trainer.extend(extensions.GeneratorSample(configuration["dataset_path"], x_dim,
-                                              xi_dim,noise_dim), trigger=(1, 'epoch'))
+    if configuration["experiment"] == "random_left_right":
+        trainer.extend(extensions.GeneratorSample(configuration["dataset_path"], x_dim,
+                                                  xi_dim,noise_dim), trigger=(1, 'epoch'))
 
 
     # We delete the f1_metric.dat file to be sure we do not mixed multiple experiment data.

@@ -7,7 +7,7 @@ import testing_model
 
 class GANUpdater(training.StandardUpdater):
     def __init__(self, iterator, noise_iterator, noise_dim,
-                 x_dim, xi_dim,
+                 x_dim, xi_dim, experiment,
                  optimizer_generator,
                  optimizer_discriminator, device=-1):
 
@@ -20,7 +20,8 @@ class GANUpdater(training.StandardUpdater):
         self.noise_dim=noise_dim
         self.x_dim = x_dim
         self.xi_dim = xi_dim
-
+        self.experiment = experiment
+        
     @property
     def generator(self):
         return self._optimizers['gen'].target
@@ -70,7 +71,7 @@ class GANUpdater(training.StandardUpdater):
     def update_core(self):
         if self.is_new_epoch:
             self.epoch_counter+=1
-            if self.epoch_counter%1==0:
+            if (self.epoch_counter%1==0 and self.experiment=="random_left_right"):
                 result=testing_model.test(self.generator,1000,self.noise_dim)
                 reporter.report({'lin_ratio': result[0]})
                 reporter.report({'cgan_ratio': result[1]})
