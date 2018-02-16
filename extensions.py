@@ -8,14 +8,14 @@ import import_dataset
 import matplotlib.patches as patches
 
 class GeneratorSample(extension.Extension):
-    def __init__(self, dataset_path, x_dim, xi_dim,
+    def __init__(self, configuration, x_dim, xi_dim,
                  noise_dim, dirname='samples', sample_format='png'):
         self._dirname = dirname
         self._sample_format = sample_format
         self.noise_dim=noise_dim
         self.x_dim=x_dim
         self.xi_dim=xi_dim
-        self.dataset_path=dataset_path
+        self.configuration=configuration
         
     def __call__(self, trainer):
         dirname = os.path.join(trainer.out, self._dirname)
@@ -23,7 +23,7 @@ class GeneratorSample(extension.Extension):
             n_gen=1
             z=Variable(np.random.uniform(-1,1,(n_gen,self.noise_dim)).astype(np.float32))
 
-            dataset=import_dataset.import_data(self.dataset_path,3,self.x_dim,self.xi_dim)
+            dataset=import_dataset.import_data(self.configuration,self.x_dim,self.xi_dim)
             x=Variable(dataset[1:2,:self.x_dim])
 
             xi_gen = trainer.updater.generator(z,x).data[0]
@@ -69,13 +69,3 @@ class GeneratorSample(extension.Extension):
         x = trainer.updater.forward(test=True)
         x = x.data
         return x
-
-"""
-@training.make_extension(trigger=(1, 'epoch'))
-def sample_ims(trainer):
-    x = trainer.updater.forward(test)
-    x = x.data
-    print(x)
-    filename = 'result/sample/{}.png'.format(trainer.updater.epoch)
-    plot.save_ims(filename, x)
-"""

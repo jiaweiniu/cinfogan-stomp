@@ -79,7 +79,7 @@ if __name__ == '__main__':
         )
     else:
         print("Not using Wasserstein")
-        optimizer_generator = optimizers.SGD()
+        optimizer_generator = optimizers.Adam()
         optimizer_discriminator = optimizers.SGD()
         
         optimizer_generator.setup(gen)
@@ -112,7 +112,7 @@ if __name__ == '__main__':
     trainer.extend(extensions.PrintReport(print_report_args))
     trainer.extend(extensions.ProgressBar())
     if configuration["experiment"] == "random_left_right":
-        trainer.extend(extensions.GeneratorSample(configuration["dataset_path"], x_dim,
+        trainer.extend(extensions.GeneratorSample(configuration, x_dim,
                                                   xi_dim,noise_dim), trigger=(1, 'epoch'))
 
 
