@@ -8,5 +8,6 @@
     "wasserstein": true,
     "n_noisedim": 6,
     "dataset_path": "../dataset_generator/dataset/random_left_right/rrtconnect_4obs",
-    "output_name": ""
+    "output_name": "",
+    "gpu": -1
 }

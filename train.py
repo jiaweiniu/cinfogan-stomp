@@ -1,6 +1,5 @@
 import os
 import json
-import ast
 import argparse
 from chainer import Variable,datasets, training, iterators, optimizers, serializers
 from chainer.training import updater, extensions
@@ -15,17 +14,6 @@ iterators.RandomNoiseIterator = RandomNoiseIterator
 updater.GANUpdater = GANUpdater
 extensions.GeneratorSample = GeneratorSample
 
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--gpu', type=int, default=-1)
-    parser.add_argument('--nz', type=int, default=100)
-    parser.add_argument('--epochs', type=int, default=200)
-    parser.add_argument('--batch-size', type=int, default=15)
-    parser.add_argument('--noisedim', type=int, default=20)
-    parser.add_argument("--wasserstein", action="store_true")
-    
-    return parser.parse_args()
-
 
 if __name__ == '__main__':
     with open(os.path.join("conf.json")) as fd:
@@ -38,9 +26,7 @@ if __name__ == '__main__':
     experiment = configuration["experiment"]
     n_neurons_gen  = configuration["n_neurons_gen"]
     n_neurons_dis  = configuration["n_neurons_dis"]
-    
-    args = parse_args()
-    gpu = args.gpu
+    gpu = configuration["gpu"]
 
     if experiment == "random_left_right":
         x_dim=12
