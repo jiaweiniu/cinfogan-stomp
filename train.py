@@ -36,8 +36,8 @@ if __name__ == '__main__':
     epochs     = configuration["n_epochs"]
     noise_dim  = configuration["n_noisedim"]
     experiment = configuration["experiment"]
-    n_neurons  = configuration["n_neurons"]
-    z_neurons  = configuration["z_neurons"]
+    n_neurons_gen  = configuration["n_neurons_gen"]
+    n_neurons_dis  = configuration["n_neurons_dis"]
     
     args = parse_args()
     gpu = args.gpu
@@ -54,8 +54,8 @@ if __name__ == '__main__':
     z_iter = iterators.RandomNoiseIterator(UniformNoiseGenerator(-1, 1, noise_dim), batch_size)
 
     # Creating the Neural Networks models
-    gen=Generator(x_dim, xi_dim, noise_dim,n_neurons)
-    dis=Discriminator(x_dim, xi_dim,z_neurons)
+    gen=Generator(x_dim, xi_dim, noise_dim,n_neurons_gen)
+    dis=Discriminator(x_dim, xi_dim,n_neurons_dis)
     critic=Critic(x_dim, xi_dim)
     
     if args.wasserstein:

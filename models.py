@@ -4,13 +4,13 @@ from chainer import functions as F
 from chainer import links as L
 
 class Generator(Chain):
-    def __init__(self, x_dim, xi_dim, noise_dim,n_neurons):
+    def __init__(self, x_dim, xi_dim, noise_dim,n_neurons_gen):
         super(Generator, self).__init__(
-            l1=L.Linear(x_dim+noise_dim, n_neurons),
-            l2=L.Linear(None, n_neurons),
+            l1=L.Linear(x_dim+noise_dim, n_neurons_gen),
+            l2=L.Linear(None, n_neurons_gen),
             l3=L.Linear(None, xi_dim),
-            bn_l1=L.BatchNormalization(n_neurons),
-            bn_l2=L.BatchNormalization(n_neurons),
+            bn_l1=L.BatchNormalization(n_neurons_gen),
+            bn_l2=L.BatchNormalization(n_neurons_gen),
         )
         
     def __call__(self, z, y):
@@ -24,9 +24,9 @@ class Generator(Chain):
 
 
 class Discriminator(Chain):
-    def __init__(self, x_dim, xi_dim,z_neurons):
+    def __init__(self, x_dim, xi_dim,n_neurons_dis):
         super(Discriminator, self).__init__(
-            l1=L.Linear(x_dim+xi_dim, z_neurons),
+            l1=L.Linear(x_dim+xi_dim, n_neurons_dis),
             l2=L.Linear(None, 2),
             )
 

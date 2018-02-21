@@ -3,8 +3,8 @@
     "n_data": 50000,
     "n_epochs": 100,
     "n_batchsize": 35,
-    "n_neurons": 203,
-    "z_neurons":100,
+    "n_neurons_gen": 203,
+    "n_neurons_dis":100,
     "n_noisedim": 60,
     "dataset_path": "../rrtconnect",
     "output_name": ""
