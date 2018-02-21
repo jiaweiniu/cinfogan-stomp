@@ -30,7 +30,7 @@ def parse_args():
 if __name__ == '__main__':
     with open(os.path.join("conf.json")) as fd:
         json_data = json.load(fd)
-    configuration=ast.literal_eval(json.dumps(json_data))
+    configuration=json_data
     
     batch_size = configuration["n_batchsize"]
     epochs     = configuration["n_epochs"]
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     dis=Discriminator(x_dim, xi_dim,n_neurons_dis)
     critic=Critic(x_dim, xi_dim)
     
-    if args.wasserstein:
+    if configuration["wasserstein"]:
         print("Using Wasserstein")
         optimizer_generator = optimizers.RMSprop(lr=0.00005)
         optimizer_critic = optimizers.RMSprop(lr=0.00005)
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     trainer.extend(extensions.LogReport())
 
     
-    if args.wasserstein:        
+    if configuration["wasserstein"]:        
         print_report_args = ['epoch', 'gen/loss', 'cri/loss',
                              'lin_ratio','cgan_ratio','diff_ratio']
     else:
@@ -131,7 +131,7 @@ if __name__ == '__main__':
 
     # Saving the models
     serializers.save_npz("results/models/"+output_name+"_gen.model",gen)
-    if args.wasserstein:
+    if configuration["wasserstein"]:
         serializers.save_npz("results/models/"+output_name+"_cri.model",cri)
     else:
         serializers.save_npz("results/models/"+output_name+"_dis.model",dis)

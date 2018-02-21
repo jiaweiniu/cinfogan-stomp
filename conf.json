@@ -3,9 +3,10 @@
     "n_data": 50000,
     "n_epochs": 100,
     "n_batchsize": 35,
-    "n_neurons_gen": 203,
-    "n_neurons_dis":100,
-    "n_noisedim": 60,
-    "dataset_path": "../rrtconnect",
+    "n_neurons_gen": 20,
+    "n_neurons_dis": 20,
+    "wasserstein": true,
+    "n_noisedim": 6,
+    "dataset_path": "../dataset_generator/dataset/random_left_right/rrtconnect_4obs",
     "output_name": ""
 }
