@@ -32,11 +32,11 @@ if __name__ == '__main__':
         json_data = json.load(fd)
     configuration=ast.literal_eval(json.dumps(json_data))
     
-    nz         = configuration["n_neurons"]
     batch_size = configuration["n_batchsize"]
     epochs     = configuration["n_epochs"]
     noise_dim  = configuration["n_noisedim"]
     experiment = configuration["experiment"]
+    n_neurons  = configuration["n_neurons"]
     
     args = parse_args()
     gpu = args.gpu
@@ -47,13 +47,13 @@ if __name__ == '__main__':
     else:
         x_dim=14
         xi_dim=7
-
+   
     train = import_dataset.import_data(configuration, x_dim, xi_dim)    
     train_iter = iterators.SerialIterator(train, batch_size)
     z_iter = iterators.RandomNoiseIterator(UniformNoiseGenerator(-1, 1, noise_dim), batch_size)
 
     # Creating the Neural Networks models
-    gen=Generator(x_dim, xi_dim, noise_dim)
+    gen=Generator(x_dim, xi_dim, noise_dim,n_neurons)
     dis=Discriminator(x_dim, xi_dim)
     critic=Critic(x_dim, xi_dim)
     

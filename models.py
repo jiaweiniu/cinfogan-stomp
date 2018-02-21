@@ -3,15 +3,14 @@ from chainer import Chain
 from chainer import functions as F
 from chainer import links as L
 
-
 class Generator(Chain):
-    def __init__(self, x_dim, xi_dim, noise_dim):
+    def __init__(self, x_dim, xi_dim, noise_dim,n_neurons):
         super(Generator, self).__init__(
-            l1=L.Linear(x_dim+noise_dim, 100),
-            l2=L.Linear(None, 100),
+            l1=L.Linear(x_dim+noise_dim, n_neurons),
+            l2=L.Linear(None, n_neurons),
             l3=L.Linear(None, xi_dim),
-            bn_l1=L.BatchNormalization(100),
-            bn_l2=L.BatchNormalization(100),
+            bn_l1=L.BatchNormalization(n_neurons),
+            bn_l2=L.BatchNormalization(n_neurons),
         )
         
     def __call__(self, z, y):
@@ -58,3 +57,5 @@ class Critic(Chain):
         h = F.leaky_relu(self.l2(h))
         h = self.l3(h)
         return h
+
+    
