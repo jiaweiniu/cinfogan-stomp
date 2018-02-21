@@ -24,9 +24,9 @@ class Generator(Chain):
 
 
 class Discriminator(Chain):
-    def __init__(self, x_dim, xi_dim):
+    def __init__(self, x_dim, xi_dim,z_neurons):
         super(Discriminator, self).__init__(
-            l1=L.Linear(x_dim+xi_dim, 512),
+            l1=L.Linear(x_dim+xi_dim, z_neurons),
             l2=L.Linear(None, 2),
             )
 

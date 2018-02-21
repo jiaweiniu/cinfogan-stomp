@@ -37,6 +37,7 @@ if __name__ == '__main__':
     noise_dim  = configuration["n_noisedim"]
     experiment = configuration["experiment"]
     n_neurons  = configuration["n_neurons"]
+    z_neurons  = configuration["z_neurons"]
     
     args = parse_args()
     gpu = args.gpu
@@ -54,7 +55,7 @@ if __name__ == '__main__':
 
     # Creating the Neural Networks models
     gen=Generator(x_dim, xi_dim, noise_dim,n_neurons)
-    dis=Discriminator(x_dim, xi_dim)
+    dis=Discriminator(x_dim, xi_dim,z_neurons)
     critic=Critic(x_dim, xi_dim)
     
     if args.wasserstein:
