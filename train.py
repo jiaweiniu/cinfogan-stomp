@@ -60,6 +60,9 @@ if __name__ == '__main__':
             iterator=train_iter,
             noise_iterator=z_iter,
             noise_dim=noise_dim,
+            x_dim=x_dim,
+            xi_dim=xi_dim,
+            experiment=configuration["experiment"],
             optimizer_generator=optimizer_generator,
             optimizer_critic=optimizer_critic,
             device=gpu,
@@ -118,7 +121,7 @@ if __name__ == '__main__':
     # Saving the models
     serializers.save_npz("results/models/"+output_name+"_gen.model",gen)
     if configuration["wasserstein"]:
-        serializers.save_npz("results/models/"+output_name+"_cri.model",cri)
+        serializers.save_npz("results/models/"+output_name+"_cri.model",critic)
     else:
         serializers.save_npz("results/models/"+output_name+"_dis.model",dis)
     

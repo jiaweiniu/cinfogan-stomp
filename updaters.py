@@ -88,9 +88,11 @@ class GANUpdater(training.StandardUpdater):
 
 
 class WassersteinGANUpdater(training.StandardUpdater):
-    def __init__(self, iterator, noise_iterator, noise_dim, optimizer_generator,
+    def __init__(self, iterator, noise_iterator, noise_dim,
+                 x_dim, xi_dim, experiment,
+                 optimizer_generator,
                  optimizer_critic, device=-1):
-
+        
         iterators = {'main': iterator, 'z': noise_iterator}
         optimizers = {'gen': optimizer_generator,
                       'cri': optimizer_critic}
@@ -98,7 +100,10 @@ class WassersteinGANUpdater(training.StandardUpdater):
         super(WassersteinGANUpdater,self).__init__(iterators, optimizers, device=device)
         self.noise_dim=noise_dim
         self.epoch_counter=0
-        
+        self.x_dim = x_dim
+        self.xi_dim = xi_dim
+        self.experiment = experiment        
+
     @property
     def generator(self):
         return self._optimizers['gen'].target
@@ -135,7 +140,17 @@ class WassersteinGANUpdater(training.StandardUpdater):
             self._optimizers[name].update()
 
     def update_core(self):
-        if self.is_new_epoch:
+        if self.epoch==self.epoch_counter:
+            self.epoch_counter+=1
+            if (self.epoch_counter%1==0 and self.experiment=="random_left_right"):
+                result=testing_model.test(self.generator,1000,self.noise_dim)
+                reporter.report({'lin_ratio': result[0]})
+                reporter.report({'cgan_ratio': result[1]})
+                reporter.report({'diff_ratio': result[2]})
+                f=open('results/f1_metric.dat','a')
+                f.write(str(result[0])+" "+str(result[1])+" "+str(result[2])+"\n")
+                f.close()
+
             pass
 
         def _update(optimizer, loss):
@@ -153,8 +168,8 @@ class WassersteinGANUpdater(training.StandardUpdater):
             x_real = self.converter(x_real_it, self.device)
 
             
-            x_real_x=x_real[:,0:12]
-            x_real_xi=x_real[:,12:18]
+            x_real_x=x_real[:,:self.x_dim]
+            x_real_xi=x_real[:,self.x_dim:]
             y_real = self.critic(Variable(x_real_x),Variable(x_real_xi))
         
             y_real.grad = np.ones_like(y_real.data)
@@ -189,9 +204,3 @@ class WassersteinGANUpdater(training.StandardUpdater):
         
         reporter.report({'gen/loss': F.sum(y_fake)/y_fake.shape[0]})
 
-        self.epoch_counter+=1
-        if self.epoch_counter%66==0:
-            result=testing_model.test(self.generator,1000,self.noise_dim)
-            reporter.report({'cgan_improvement': result[0]})
-
-            self.epoch_counter=0
