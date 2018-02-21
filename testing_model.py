@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from scipy import interpolate
+from models import Generator, Discriminator, Critic
 
 from chainer import serializers, Variable
 
@@ -66,3 +67,9 @@ def test(gen,n_tests,noise_dim):
 
     return collisions_measure(x.data,xi.data)
     
+
+if __name__ == '__main__':
+    gen=Generator(12, 6, 6,20)
+    serializers.load_npz("results/models/random_left_right_gen.model",gen)
+
+    print(test(gen,100000,6))
