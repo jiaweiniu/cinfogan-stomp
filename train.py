@@ -26,6 +26,7 @@ if __name__ == '__main__':
     experiment = configuration["experiment"]
     n_neurons_gen  = configuration["n_neurons_gen"]
     n_neurons_dis  = configuration["n_neurons_dis"]
+    n_neurons_cri  = configuration["n_neurons_cri"]
     gpu = configuration["gpu"]
 
     if experiment == "random_left_right":
@@ -42,7 +43,7 @@ if __name__ == '__main__':
     # Creating the Neural Networks models
     gen=Generator(x_dim, xi_dim, noise_dim,n_neurons_gen)
     dis=Discriminator(x_dim, xi_dim,n_neurons_dis)
-    critic=Critic(x_dim, xi_dim)
+    critic=Critic(x_dim, xi_dim,n_neurons_cri)
     
     if configuration["wasserstein"]:
         print("Using Wasserstein")

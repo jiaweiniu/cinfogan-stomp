@@ -1,6 +1,6 @@
 import numpy as np
 import chainer
-from chainer import training, reporter
+from chainer import training, reporter, serializers
 from chainer import functions as F
 from chainer import Variable
 import testing_model
@@ -69,10 +69,11 @@ class GANUpdater(training.StandardUpdater):
             self._optimizers[name].update()
 
     def update_core(self):
-        if self.is_new_epoch:
+        if self.epoch==self.epoch_counter:
             self.epoch_counter+=1
-            if (self.epoch_counter%1==0 and self.experiment=="random_left_right"):
-                result=testing_model.test(self.generator,1000,self.noise_dim)
+            if self.experiment=="random_left_right":
+                result=testing_model.test(self.generator,50000,self.noise_dim)
+                serializers.save_npz("results/models/tmp/"+str(self.epoch_counter-1)+"_gen.model",self.generator)
                 reporter.report({'lin_ratio': result[0]})
                 reporter.report({'cgan_ratio': result[1]})
                 reporter.report({'diff_ratio': result[2]})
@@ -80,7 +81,6 @@ class GANUpdater(training.StandardUpdater):
                 f.write(str(result[0])+" "+str(result[1])+" "+str(result[2])+"\n")
                 f.close()
                 
-                self.epoch_counter=0
             pass
 
         losses = self.backward(self.forward())
@@ -142,8 +142,9 @@ class WassersteinGANUpdater(training.StandardUpdater):
     def update_core(self):
         if self.epoch==self.epoch_counter:
             self.epoch_counter+=1
-            if (self.epoch_counter%1==0 and self.experiment=="random_left_right"):
-                result=testing_model.test(self.generator,1000,self.noise_dim)
+            if self.experiment=="random_left_right":
+                result=testing_model.test(self.generator,50000,self.noise_dim)
+                serializers.save_npz("results/models/tmp/"+str(self.epoch_counter-1)+"_gen.model",self.generator)
                 reporter.report({'lin_ratio': result[0]})
                 reporter.report({'cgan_ratio': result[1]})
                 reporter.report({'diff_ratio': result[2]})

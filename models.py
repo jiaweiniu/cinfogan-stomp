@@ -37,13 +37,13 @@ class Discriminator(Chain):
         return h
 
 class Critic(Chain):
-    def __init__(self, x_dim, xi_dim):
+    def __init__(self, x_dim, xi_dim, n_neurons_cri):
         super(Critic, self).__init__(
-            l1=L.Linear(x_dim+xi_dim, 100), # we take the two axis and repeat the information
-            l2=L.Linear(None, 100),
+            l1=L.Linear(x_dim+xi_dim, n_neurons_cri),
+            l2=L.Linear(None, n_neurons_cri),
             l3=L.Linear(None, 1),
-            bn_l1=L.BatchNormalization(100),
-            bn_l2=L.BatchNormalization(100),
+            bn_l1=L.BatchNormalization(n_neurons_cri),
+            bn_l2=L.BatchNormalization(n_neurons_cri),
             )
         
     def clamp(self, lower=-0.01, upper=0.01):
