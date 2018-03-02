@@ -39,7 +39,7 @@ if __name__ == '__main__':
     train = import_dataset.import_data(configuration, x_dim, xi_dim)    
     train_iter = iterators.SerialIterator(train, batch_size)
     z_iter = iterators.RandomNoiseIterator(UniformNoiseGenerator(-1, 1, noise_dim), batch_size)
-
+    print("load the data")
     # Creating the Neural Networks models
     gen=Generator(x_dim, xi_dim, noise_dim,n_neurons_gen)
     dis=Discriminator(x_dim, xi_dim,n_neurons_dis)
@@ -126,3 +126,4 @@ if __name__ == '__main__':
     else:
         serializers.save_npz("results/models/"+output_name+"_dis.model",dis)
     
+
