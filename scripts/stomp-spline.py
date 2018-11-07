@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     record_list_ξ = False
     verbose=False
-    n_experiments = 200
+    n_experiments = 500
     data=[]
     
     for i in tqdm(range(n_experiments)):

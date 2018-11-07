@@ -119,7 +119,7 @@ else:
 print("setup trainer...")
 trainer = training.Trainer(updater, stop_trigger=(epochs, 'epoch'))
 
-trainer.out="results" # changing the name because we do multiple experiments
+trainer.out="../results" # changing the name because we do multiple experiments
 trainer.extend(extensions.LogReport())
 
     
@@ -140,7 +140,7 @@ if configuration["experiment"] == "random_left_right":
 
 # We delete the f1_metric.dat file to be sure we do not mixed multiple experiment data.
 
-cmd = "touch results/f1_metric.dat && rm results/f1_metric.dat"
+cmd = "touch ../results/f1_metric.dat && rm ../results/f1_metric.dat"
 os.system(cmd)
 
 print("START TRAINING!!")
@@ -153,11 +153,11 @@ else:
 
 # Saving the models
 
-serializers.save_npz("results/models/"+output_name+"_gen.model",gen)
+serializers.save_npz("../results/models/"+output_name+"_gen.model",gen)
 if configuration["wasserstein"]:
-    serializers.save_npz("results/models/"+output_name+"_cri.model",critic)
+    serializers.save_npz("../results/models/"+output_name+"_cri.model",critic)
 else:
-    serializers.save_npz("results/models/"+output_name+"_dis.model",dis)
+    serializers.save_npz("../results/models/"+output_name+"_dis.model",dis)
 
     
 

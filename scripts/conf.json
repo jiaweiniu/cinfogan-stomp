@@ -10,7 +10,7 @@
     "wasserstein": false,
     "n_neurons_cri": 50,
     "n_z": 60,
-    "dataset_path": "../rrtconnect",
+    "dataset_path": "../../rrtconnect",
     "output_name": "",
     "gpu": -1
 }

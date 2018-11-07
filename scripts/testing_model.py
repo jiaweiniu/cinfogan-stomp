@@ -75,6 +75,6 @@ def test(gen,n_tests,n_z, n_continuous):
 
 if __name__ == '__main__':
     gen=Generator(60, 12, 6, 2, 100)
-    serializers.load_npz("results/models/tmp/10_gen.model",gen)
+    serializers.load_npz("../results/models/tmp/10_gen.model",gen)
     print(gen)
     print(test(gen,50,20,2))

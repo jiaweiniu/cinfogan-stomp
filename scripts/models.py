@@ -15,10 +15,6 @@ class Generator(Chain):
         
     def __call__(self, z, y):
         h = F.concat([z,y])
-        #print("z")
-        #print(z.shape)
-        #print("y")
-        #print(y.shape)
         ''' I deleted the batch normalization because if we normalize how can
          the generator understand the exact problem ?
         print("dim z: "+str(z.shape)) '''
@@ -36,8 +32,6 @@ class Discriminator(Chain):
             l1=L.Linear(x_dim+xi_dim, n_neurons_dis),
             l2=L.Linear(None, n_neurons_dis),
             fc_d=L.Linear(None, 2),
-
-            #fc_mi1=L.linear(n_neurons_dis, n_neurons_dis),
             fc_mi1=L.Linear(n_neurons_dis, n_neurons_dis),
 
             fc_mi1_bn=L.BatchNormalization(n_neurons_dis),
@@ -46,17 +40,8 @@ class Discriminator(Chain):
 
     def __call__(self, x, y):
         h = F.concat([x,y])
-        #print("x shape")
-        #print(x.shape)
-        #print("y shape")
-        #print(y.shape)
-        #h = x
         h = F.relu(self.l1(h))
-        #h = F.relu(self.l2(h))
-
         h = self.l2(h)
-        #return h
-
         # Real/Fake prediction
         d = self.fc_d(h)
 
@@ -87,9 +72,5 @@ class Critic(Chain):
         h = F.leaky_relu(self.l2(h))
         h = self.l3(h)
         return h
-        #d = self.fc_d(h)
-        #mi = F.leaky_relu(self.fc_mi1_bn(self.fc_mi1(h)), test=test)
-        #mi = self.fc_mi2(mi)
-        #return d, mi
-
+       
     

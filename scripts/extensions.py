@@ -53,20 +53,6 @@ class GeneratorSample(extension.Extension):
             ax.add_patch(circle)
            
 
-            #circle = patches.Circle((x[4],x[5]), radius=0.1, color='red',alpha=0.7)
-            #ax.add_patch(circle)
-            #circle = patches.Circle((x[6],x[7]), radius=0.1, color='red',alpha=0.7)
-            #ax.add_patch(circle)
-            #circle = patches.Circle((x[8],x[9]), radius=0.1, color='red',alpha=0.7)
-            #ax.add_patch(circle)
-            #circle = patches.Circle((x[11],x[10]), radius=0.1, color='red',alpha=0.7)
-            #ax.add_patch(circle)
-
-
-
-           
-            
-        
             ax.plot([start[0],xi_gen[+0],xi_gen[2],xi_gen[4],goal[0]],[start[1],xi_gen[1],xi_gen[3],xi_gen[5],goal[1]],marker='*')
             
             ax.scatter(start[0],start[1],marker="s",s=130,color="black",zorder=20)
@@ -98,7 +84,7 @@ class GeneratorSample(extension.Extension):
             plt.close()
             #print("saved image")
 
-            serializers.save_npz("results/models/"+str(trainer.updater.epoch)+".model",trainer.updater.generator)
+            serializers.save_npz("../results/models/"+str(trainer.updater.epoch)+".model",trainer.updater.generator)
         
             
     def sample(self, trainer):
