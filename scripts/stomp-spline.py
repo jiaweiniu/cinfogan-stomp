@@ -57,7 +57,8 @@ def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
 
     print("Beginning of STOMP")
     m=0
-    while(np.sum(cost(theta,obstacles,dt))>2 and m<n_iter):
+    cost_final = 14
+    while(np.sum(cost(theta,obstacles,dt))>2 and m<n_iter and cost_final >= 12.0):
         zero_mean=np.zeros(n_timesteps)
         noisy_trajectories=np.zeros((K,2,n_timesteps))
         epsilon=np.zeros((K,2,n_timesteps))
@@ -96,13 +97,7 @@ def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
         m+=1
         list_theta.append(copy.deepcopy(theta))
 
-        if (cost_final >= 12.0):      
-            print("Iteration : "+str(m)+"  :  "+str(cost_final))
-            continue
-            
-        else:
-            break
-
+        print("Iteration : "+str(m)+"  :  "+str(cost_final))
         
     print("Finished")
             
