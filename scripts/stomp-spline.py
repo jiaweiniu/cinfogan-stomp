@@ -183,7 +183,7 @@ def update(i,line):
     points.set_data(traj_list[i*2][0],traj_list[i*2][1])
     return line,
 
-ani = animation.FuncAnimation(fig, update, frames=len(traj_list)/2,blit=False,fargs=[line])
+ani = animation.FuncAnimation(fig, update, frames=len(traj_list)//2,blit=False,fargs=[line])
 
 print("--- %s seconds ---" %(time.time()-start_time))
 
