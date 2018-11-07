@@ -32,10 +32,7 @@ def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
 
     # Initialization (set initial trajectory)
 
-    t=np.linspace(0,1,num=n_timesteps)       # divided by timesteps times between 0 to 1
-    
-    t1=np.linspace(0,1,num=n_timesteps1)       # divided by timesteps times between 0 to 1
-
+    t = np.linspace(0,1,num=n_timesteps)       # divided by timesteps times between 0 to 1    
      
     point_1 = np.array([0.3859971,0.6825634])
     point_2 = np.array([0.4785468,0.61927265])
@@ -44,8 +41,7 @@ def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
 
     theta_y = np.array([q_start[1],point_1[1],point_2[1],point_3[1],q_goal[1]])
 
-    xnew = np.arange(0.1,0.76,0.02)   # divide by 33 times
-    #xnew = np.linespace(0,1,0.02)
+    xnew = np.linspace(0.1,0.76,33)   # divide by 33 times
    
     #func = interpolate.interp1d(theta_x,theta_y,kind='quadratic')
     func = interpolate.spline(theta_x,theta_y,xnew)
@@ -118,7 +114,6 @@ if __name__ == '__main__':
     q_goal=np.asarray([0.76,0.88])
 
     n_timesteps=33
-    n_timesteps1=2
     n_noisy=20
 
     dt=0.001/n_timesteps
