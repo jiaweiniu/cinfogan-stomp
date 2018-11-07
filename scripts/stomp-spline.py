@@ -27,65 +27,20 @@ def cost(trajectory,obstacles,dt):
 
 
 def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
-    print
-    print "Start point : "+str(q_start) +"   Goal point : "+str(q_goal)
-    print 
+    print()
+    print("Start point : "+str(q_start) +"   Goal point : "+str(q_goal))
+    print()
 
     # Initialization (set initial trajectory)
 
     t=np.linspace(0,1,num=n_timesteps)       # divided by timesteps times between 0 to 1
     
     t1=np.linspace(0,1,num=n_timesteps1)       # divided by timesteps times between 0 to 1
-   
 
-    #theta=np.array([[0.1       , 0.17149928, 0.24299855, 0.31449783, 0.3859971,
-            #0.40913452, 0.43227195, 0.45540938, 0.4785468,0.52128522,
-            #0.56402365, 0.60676208, 0.6495005,0.67712538, 0.70475025,
-            #0.73237513, 0.76],
-           #[0.16      , 0.29064085, 0.4212817 , 0.55192255, 0.6825634,
-            #0.66674071, 0.65091802, 0.63509534, 0.61927265,0.63079711,
-            #0.64232157, 0.65384604, 0.6653705,0.71902787, 0.77268525,
-            #0.82634262, 0.88]])
      
-
-
     point_1 = np.array([0.3859971,0.6825634])
     point_2 = np.array([0.4785468,0.61927265])
     point_3 = np.array([0.6495005,0.6653705])
-
-    """
-    theta_abx = t1*point_1[0]+(1-t1)*q_start[0]
-    theta_aby = t1*point_1[1]+(1-t1)*q_start[1]
-    theta_bcx = t1*point_2[0]+(1-t1)*point_1[0]
-    theta_bcy = t1*point_2[1]+(1-t1)*point_1[1]
-    theta_cdx = t1*point_3[0]+(1-t1)*point_2[0]
-    theta_cdy = t1*point_3[1]+(1-t1)*point_2[1]
-    theta_dex = t1*q_goal[0]+(1-t1)*point_3[0]
-    theta_dey = t1*q_goal[1]+(1-t1)*point_3[1]
-
-    print type(theta_abx)
-    print type(theta_bcx[1:5])
-    print "1"
-    print theta_abx[1:5] + theta_bcx[1:5]
-    theta_x =[theta_abx, theta_bcx[1:5], theta_cdx[1:5], theta_dex[1:5]]
-    print theta_x
-    
-
-    theta_y =list(theta_aby)+list(theta_bcy[1:5]) + list(theta_cdy[1:5]) + list(theta_dey[1:5])
-    
-   
-  
-
-    #theta_x = [0.1       , 0.17149928, 0.24299855, 0.31449783, 0.3859971,
-            #0.40913452, 0.43227195, 0.45540938, 0.4785468,0.52128522,
-            #0.56402365, 0.60676208, 0.6495005,0.67712538, 0.70475025,
-            #0.73237513, 0.76]
-    #theta_y = [0.16      , 0.29064085, 0.4212817 , 0.55192255, 0.6825634,
-            #0.66674071, 0.65091802, 0.63509534, 0.61927265,0.63079711,
-            #0.64232157, 0.65384604, 0.6653705,0.71902787, 0.77268525,
-            #0.82634262, 0.88]
-
-    """
     theta_x = np.array([q_start[0],point_1[0],point_2[0],point_3[0],q_goal[0]])
 
     theta_y = np.array([q_start[1],point_1[1],point_2[1],point_3[1],q_goal[1]])
@@ -95,16 +50,16 @@ def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
    
     #func = interpolate.interp1d(theta_x,theta_y,kind='quadratic')
     func = interpolate.spline(theta_x,theta_y,xnew)
-    print func
+    print(func)
 
     ynew = func
 
     theta = np.array([xnew,ynew])
 
-    print "Initial trajectory"
-    print
-    print theta
-    print
+    print("Initial trajectory")
+    print()
+    print(theta)
+    print()
 
     list_theta=[]   # create a []
 
@@ -151,28 +106,12 @@ def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
 
         if (cost_final >= str(12.0)):
            
-            print "Iteration : "+str(m)+"  :  "+cost_final
+            print("Iteration : "+str(m)+"  :  "+cost_final)
             continue
             
         else:
-            print "finished"
+            print("finished")
             break
-
-        #for o in obstacles:
-           #for i in xnew:
-               #for j in ynew:
-                   #dist = np.sqrt(np.sum(np.square(np.array(i,j)-o)))
-                   #print "dist"
-                   #print dist
-        
-        #if (dist < 0.1):
-           
-            #print "Iteration : "+str(m)+"  :  "+cost_final
-            #continue
-            
-        #else:
-            #print "finished"
-            #break
 
             
     return list_theta
@@ -215,7 +154,7 @@ obstacles=[[0.5,0.78],[0.6,0.5],[0.3,0.3]]
 #obstacles=[[0.5,0.78],[0.6,0.5],[0.3,0.3],[0.2,0.5]]
 
 traj_list=stomp(q_start,q_goal,n_timesteps,n_noisy,n_iter,obstacles,dt)
-print traj_list[-1]
+print(traj_list[-1])
 
 fig=plt.figure()
 ax = fig.add_subplot(111, aspect='equal')
@@ -246,7 +185,7 @@ def update(i,line):
 
 ani = animation.FuncAnimation(fig, update, frames=len(traj_list)/2,blit=False,fargs=[line])
 
-print ("--- %s seconds ---" %(time.time()-start_time))
+print("--- %s seconds ---" %(time.time()-start_time))
 
 ax.get_xaxis().set_visible(False)
 ax.get_yaxis().set_visible(False)
