@@ -92,19 +92,19 @@ def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
         theta+=np.transpose(delta_theta)
     
         # Compute trajectory cost
-        cost_final = str(np.sum(cost(theta,obstacles,dt)))
+        cost_final = np.sum(cost(theta,obstacles,dt))
         m+=1
         list_theta.append(copy.deepcopy(theta))
 
-        if (cost_final >= str(12.0)):
-           
-            print("Iteration : "+str(m)+"  :  "+cost_final)
+        if (cost_final >= 12.0):      
+            print("Iteration : "+str(m)+"  :  "+str(cost_final))
             continue
             
         else:
-            print("Finished")
             break
 
+        
+    print("Finished")
             
     return list_theta
 
