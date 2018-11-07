@@ -37,28 +37,28 @@ def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
     point_1 = np.array([0.3859971,0.6825634])
     point_2 = np.array([0.4785468,0.61927265])
     point_3 = np.array([0.6495005,0.6653705])
-    theta_x = np.array([q_start[0],point_1[0],point_2[0],point_3[0],q_goal[0]])
-
-    theta_y = np.array([q_start[1],point_1[1],point_2[1],point_3[1],q_goal[1]])
+    
+    ξ_x = np.array([q_start[0],point_1[0],point_2[0],point_3[0],q_goal[0]])
+    ξ_y = np.array([q_start[1],point_1[1],point_2[1],point_3[1],q_goal[1]])
 
     xnew = np.linspace(0.1,0.76,33)   # divide by 33 times
    
     #func = interpolate.interp1d(theta_x,theta_y,kind='quadratic')
-    func = interpolate.spline(theta_x,theta_y,xnew)
+    func = interpolate.spline(ξ_x,ξ_y,xnew)
 
     ynew = func
 
-    theta = np.array([xnew,ynew])
+    ξ = np.array([xnew,ynew])
 
 
-    list_theta=[]   # create a []
+    list_ξ=[]   # create a []
 
-    list_theta.append(theta)   # [[theta]]
+    list_ξ.append(ξ)   # [[theta]]
 
     print("Beginning of STOMP")
     m=0
     cost_final = 14
-    while(np.sum(cost(theta,obstacles,dt))>2 and m<n_iter and cost_final >= 12.0):
+    while(np.sum(cost(ξ,obstacles,dt))>2 and m<n_iter and cost_final >= 12.0):
         zero_mean=np.zeros(n_timesteps)
         noisy_trajectories=np.zeros((K,2,n_timesteps))
         epsilon=np.zeros((K,2,n_timesteps))
@@ -66,12 +66,11 @@ def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
         
         # For each noisy trajectory
         for k in range(K):
-        # For each degree of freedom of the robot
+            # For each degree of freedom of the robot
             for i in range(2):
                 epsilon[k,i]=np.random.multivariate_normal(zero_mean,R_inv)
-                noisy_trajectories[k,i]=theta[i]+epsilon[k,i]
+                noisy_trajectories[k,i]=ξ[i]+epsilon[k,i]
             s[k]=cost(noisy_trajectories[k],obstacles,dt)
-            #print noisy_trajectories[1]
 
         p=np.zeros((K,n_timesteps))
         for j in range(n_timesteps):
@@ -80,28 +79,28 @@ def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
             for k in range(K):
                 p[k,j]=np.exp(-10*(s[k,j]-min_s)/(max_s-min_s))
     
-        
         # Compute delta theta
-        delta_theta=np.zeros((n_timesteps,2))
-        delta_theta[:,0]=np.sum(np.dot(np.transpose(epsilon[:,0]),p),axis=0)
-        delta_theta[:,1]=np.sum(np.dot(np.transpose(epsilon[:,1]),p),axis=0)
+        δξ=np.zeros((n_timesteps,2))
+        δξ[:,0]=np.sum(np.dot(np.transpose(epsilon[:,0]),p),axis=0)
+        δξ[:,1]=np.sum(np.dot(np.transpose(epsilon[:,1]),p),axis=0)
 
         # Smoothing
-        delta_theta=np.dot(M,delta_theta)
+        δξ=np.dot(M,δξ)
     
         # Update trajectory
-        theta+=np.transpose(delta_theta)
+        ξ+=np.transpose(δξ)
     
         # Compute trajectory cost
-        cost_final = np.sum(cost(theta,obstacles,dt))
+        cost_final = np.sum(cost(ξ,obstacles,dt))
         m+=1
-        list_theta.append(copy.deepcopy(theta))
+        list_ξ.append(copy.deepcopy(ξ))
 
         print("Iteration : "+str(m)+"  :  "+str(cost_final))
         
     print("Finished")
             
-    return list_theta
+    return list_ξ
+
 
 
 if __name__ == '__main__':
