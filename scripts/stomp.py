@@ -18,15 +18,20 @@ def cost(trajectory,obstacles,dt):
     return final_cost
 
 
-def stomp(q_start, q_goal, ξ, n_timesteps, K, R_inv, M, n_iter, obstacles, dt):
-    print()
-    print("Start point : "+str(q_start) +"   Goal point : "+str(q_goal))
-    print("Generation of initial trajectory")
+def stomp(q_start, q_goal, ξ, n_timesteps, K, R_inv, M,
+          n_iter, obstacles, dt, record_list_ξ=False, verbose=False):
 
-    list_ξ=[]   # create a []
-    list_ξ.append(ξ)   # adding initial trajectory
+    if verbose:
+        print()
+        print("Start point : "+str(q_start) +"   Goal point : "+str(q_goal))
+        print("Generation of initial trajectory")
 
-    print("Beginning of STOMP")
+    if record_list_ξ:
+        list_ξ=[]   # create a []
+        list_ξ.append(ξ)   # adding initial trajectory
+
+    if verbose:
+        print("Beginning of STOMP")
     m=0
     cost_final = 14
     while(np.sum(cost(ξ,obstacles,dt))>2 and m<n_iter and cost_final >= 12.0):
@@ -64,10 +69,18 @@ def stomp(q_start, q_goal, ξ, n_timesteps, K, R_inv, M, n_iter, obstacles, dt):
         # Compute trajectory cost
         cost_final = np.sum(cost(ξ,obstacles,dt))
         m+=1
-        list_ξ.append(copy.deepcopy(ξ))
-
-        print("Iteration : "+str(m)+"  :  "+str(cost_final))
         
-    print("Finished")
-            
-    return list_ξ
+        if record_list_ξ:
+            list_ξ.append(copy.deepcopy(ξ))
+
+        if verbose:
+            print("Iteration : "+str(m)+"  :  "+str(cost_final))
+
+    if verbose:
+        print("Finished")
+
+    if record_list_ξ:
+        return list_ξ
+
+    else:
+        return ξ

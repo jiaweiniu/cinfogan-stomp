@@ -4,15 +4,14 @@ import time
 from stomp import stomp
 from initial_trajectory import cinfogan_initial_traj, linear_initial_traj 
 from animation_stomp import animation_stomp
+from tqdm import tqdm
 
 if __name__ == '__main__':
-    q_start=np.asarray([0.1,0.76])
-    q_goal=np.asarray([0.76,0.32])
-
-    n_timesteps=33
-    n_noisy=20
-
+    #--- STOMP parameters ---#
+    n_timesteps=50
     dt=0.001/n_timesteps
+    n_noisy=20
+    n_iter=30
     
     A=np.zeros((n_timesteps+2,n_timesteps))
 
@@ -34,16 +33,30 @@ if __name__ == '__main__':
     for i in range(n_timesteps):
         M[:,i]=R_inv[:,i]/(n_timesteps*max(R_inv[:,i]))
 
-    n_iter=30
-    
+    #--- Problem x definition ---#
+    q_start=np.asarray([0.1,0.16])
+    q_goal=np.asarray([0.76,0.88])
     obstacles=[[0.5,0.78],[0.6,0.5],[0.3,0.3]]
 
-    start_time=time.time()
+    record_list_ξ = False
+    verbose=False
+    for i in tqdm(range(10)):
+        start_time=time.time()
+        ξ_0 = linear_initial_traj(q_start, q_goal, n_timesteps)
 
-    ξ_0 = linear_initial_traj(q_start, q_goal, n_timesteps)
-    list_ξ=stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M, n_iter, obstacles, dt)
+        if record_list_ξ:
+            list_ξ = stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M,
+                           n_iter, obstacles, dt, record_list_ξ)
 
-    print()
-    print("--- %s seconds ---" %(time.time()-start_time))
+            end_time = time.time()
+            animation_stomp(q_start, q_goal, obstacles, list_ξ)
 
-    animation_stomp(q_start, q_goal, obstacles, list_ξ)
+        else:
+            ξ = stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M,
+                      n_iter, obstacles, dt, record_list_ξ)
+            end_time = time.time()
+
+        if verbose:
+            print()
+            print("--- %s seconds ---" %(end_time-start_time))
+
