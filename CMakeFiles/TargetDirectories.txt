@@ -1,3 +1,0 @@
-/home/jiaweiniu/Documents/cgan/CMakeFiles/rebuild_cache.dir
-/home/jiaweiniu/Documents/cgan/CMakeFiles/edit_cache.dir
-/home/jiaweiniu/Documents/cgan/CMakeFiles/random_left_right.dir
