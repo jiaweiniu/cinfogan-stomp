@@ -1,6 +1,5 @@
 import numpy as np
 import copy
-from scipy import interpolate
 
 def cost(trajectory,obstacles,dt):
     final_cost=np.zeros(trajectory.shape[1])    
@@ -19,35 +18,13 @@ def cost(trajectory,obstacles,dt):
     return final_cost
 
 
-def stomp(q_start, q_goal, n_timesteps, K, R_inv, M, n_iter, obstacles, dt):
+def stomp(q_start, q_goal, ξ, n_timesteps, K, R_inv, M, n_iter, obstacles, dt):
     print()
     print("Start point : "+str(q_start) +"   Goal point : "+str(q_goal))
     print("Generation of initial trajectory")
 
-    # Initialization (set initial trajectory)
-
-    t = np.linspace(0,1,num=n_timesteps)       # divided by timesteps times between 0 to 1    
-     
-    point_1 = np.array([0.3859971,0.6825634])
-    point_2 = np.array([0.4785468,0.61927265])
-    point_3 = np.array([0.6495005,0.6653705])
-    
-    ξ_x = np.array([q_start[0],point_1[0],point_2[0],point_3[0],q_goal[0]])
-    ξ_y = np.array([q_start[1],point_1[1],point_2[1],point_3[1],q_goal[1]])
-
-    xnew = np.linspace(0.1,0.76,33)   # divide by 33 times
-   
-    #func = interpolate.interp1d(theta_x,theta_y,kind='quadratic')
-    func = interpolate.spline(ξ_x,ξ_y,xnew)
-
-    ynew = func
-
-    ξ = np.array([xnew,ynew])
-
-
     list_ξ=[]   # create a []
-
-    list_ξ.append(ξ)   # [[theta]]
+    list_ξ.append(ξ)   # adding initial trajectory
 
     print("Beginning of STOMP")
     m=0
