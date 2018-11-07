@@ -7,3 +7,4 @@ man/*
 results/*
 pip-selfcheck.json
 *pyc
+virtualenv/*
