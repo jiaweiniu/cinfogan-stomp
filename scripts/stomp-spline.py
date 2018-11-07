@@ -168,7 +168,6 @@ for traj in traj_list:
     final_traj=np.concatenate((start,traj),axis=1)
     final_traj=np.concatenate((final_traj,goal),axis=1)
 
-plt.axis('equal')
 
 line,=ax.plot([],[])
 points,=ax.plot([],[],'ro')
