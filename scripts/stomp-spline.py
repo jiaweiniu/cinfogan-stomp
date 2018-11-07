@@ -9,8 +9,8 @@ from stomp import stomp
 from initial_trajectory import cinfogan_initial_traj, linear_initial_traj 
 
 if __name__ == '__main__':
-    q_start=np.asarray([0.1,0.16])
-    q_goal=np.asarray([0.76,0.88])
+    q_start=np.asarray([0.1,0.76])
+    q_goal=np.asarray([0.76,0.32])
 
     n_timesteps=33
     n_noisy=20
@@ -44,7 +44,8 @@ if __name__ == '__main__':
     start_time=time.time()
 
     ξ_0 = linear_initial_traj(q_start, q_goal, n_timesteps)
-    traj_list=stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M, n_iter, obstacles, dt)
+    list_ξ=stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M, n_iter, obstacles, dt)
+
     print()
     print("--- %s seconds ---" %(time.time()-start_time))
 
@@ -56,9 +57,9 @@ if __name__ == '__main__':
 
     start=np.asarray([[q_start[0]],[q_start[1]]])
     goal=np.asarray([[q_goal[0]],[q_goal[1]]])
-    for traj in traj_list:
-        final_traj=np.concatenate((start,traj),axis=1)
-        final_traj=np.concatenate((final_traj,goal),axis=1)
+    for ξ in list_ξ:
+        final_ξ=np.concatenate((start,ξ),axis=1)
+        final_ξ=np.concatenate((final_ξ,goal),axis=1)
 
 
     line,=ax.plot([],[])
@@ -68,18 +69,19 @@ if __name__ == '__main__':
     plt.ylim(0.0,1.0)
 
     def update(i,line):
-        concat_x=np.concatenate((np.concatenate((start[0],traj_list[i*2][0])),goal[0]))
-        concat_y=np.concatenate((np.concatenate((start[1],traj_list[i*2][1])),goal[1]))
+        concat_x=np.concatenate((np.concatenate((start[0],list_ξ[i*2][0])),goal[0]))
+        concat_y=np.concatenate((np.concatenate((start[1],list_ξ[i*2][1])),goal[1]))
         line.set_data(concat_x,concat_y)
-        points.set_data(traj_list[i*2][0],traj_list[i*2][1])
+        points.set_data(list_ξ[i*2][0],list_ξ[i*2][1])
         return line,
 
-    ani = animation.FuncAnimation(fig, update, frames=len(traj_list)//2,blit=False,fargs=[line])
+    if len(list_ξ)>1:
+        ani = animation.FuncAnimation(fig, update, frames=len(list_ξ)//2,blit=False,fargs=[line])
 
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
+        ax.get_xaxis().set_visible(False)
+        ax.get_yaxis().set_visible(False)
     
 
-    ani.save('cinfogan-stomp.gif', writer='imagemagick',fps=4)
+        ani.save('cinfogan-stomp.gif', writer='imagemagick',fps=4)
 
-    plt.show()
+        plt.show()
