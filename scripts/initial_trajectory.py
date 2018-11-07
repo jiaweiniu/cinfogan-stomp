@@ -20,3 +20,13 @@ def cinfogan_initial_traj(q_start, q_goal, n_timesteps):
 
     ξ_0 = np.array([xnew,ynew])
     return ξ_0
+
+
+def linear_initial_traj(q_start, q_goal, n_timesteps):
+    t = np.linspace(0,1,n_timesteps)       
+
+    ξ_0 = np.zeros((2,n_timesteps))
+    ξ_0[0] = (1-t)*q_start[0]+t*q_goal[0]
+    ξ_0[1] = (1-t)*q_start[1]+t*q_goal[1]
+
+    return ξ_0

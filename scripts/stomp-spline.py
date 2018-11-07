@@ -6,7 +6,7 @@ from matplotlib import animation
 from matplotlib.lines import Line2D
 import time
 from stomp import stomp
-from initial_trajectory import cinfogan_initial_traj
+from initial_trajectory import cinfogan_initial_traj, linear_initial_traj 
 
 if __name__ == '__main__':
     q_start=np.asarray([0.1,0.16])
@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
     start_time=time.time()
 
-    ξ_0 = cinfogan_initial_traj(q_start, q_goal, n_timesteps)
+    ξ_0 = linear_initial_traj(q_start, q_goal, n_timesteps)
     traj_list=stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M, n_iter, obstacles, dt)
     print()
     print("--- %s seconds ---" %(time.time()-start_time))
