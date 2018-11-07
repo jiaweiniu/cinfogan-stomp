@@ -34,7 +34,7 @@ def collisions_measure(x_list,xi_pred_list):
         # infogan initialization
 
         t_xi=[0,0.333,0.5,0.644,1]
-        before_spline=np.array([[start[0][0],start[0][1]],
+        before_spline=np.array([[start[0][0],start[0][1]],    # fang(3)yang(4)
                                 [xi_pred[0],xi_pred[1]],
                                 [xi_pred[2],xi_pred[3]],
                                 [xi_pred[4],xi_pred[5]],

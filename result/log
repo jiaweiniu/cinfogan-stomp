@@ -1,0 +1,180 @@
+[
+    {
+        "gen/loss": 0.7343103716622538, 
+        "elapsed_time": 0.26694297790527344, 
+        "dis/loss": 0.6565547941335991, 
+        "iteration": 67, 
+        "epoch": 1
+    }, 
+    {
+        "gen/loss": 0.7194699022307325, 
+        "dis/loss": 0.6661805474936072, 
+        "iteration": 134, 
+        "elapsed_time": 4.063082933425903, 
+        "epoch": 2, 
+        "lin_ratio": 62.2, 
+        "cgan_ratio": 73.7
+    }, 
+    {
+        "gen/loss": 0.667146053278085, 
+        "dis/loss": 0.7139600975946947, 
+        "iteration": 200, 
+        "elapsed_time": 7.8409600257873535, 
+        "epoch": 3, 
+        "lin_ratio": 64.5, 
+        "cgan_ratio": 65.4
+    }, 
+    {
+        "gen/loss": 0.6651696909719439, 
+        "dis/loss": 0.7176471788491776, 
+        "iteration": 267, 
+        "elapsed_time": 11.649841070175171, 
+        "epoch": 4, 
+        "lin_ratio": 63.800000000000004, 
+        "cgan_ratio": 61.5
+    }, 
+    {
+        "gen/loss": 0.6996476908228291, 
+        "dis/loss": 0.6895550089095955, 
+        "iteration": 334, 
+        "elapsed_time": 15.458600044250488, 
+        "epoch": 5, 
+        "lin_ratio": 65.7, 
+        "cgan_ratio": 60.8
+    }, 
+    {
+        "gen/loss": 0.7249657638145216, 
+        "dis/loss": 0.6713974864193888, 
+        "iteration": 400, 
+        "elapsed_time": 19.24826192855835, 
+        "epoch": 6, 
+        "lin_ratio": 63.0, 
+        "cgan_ratio": 63.2
+    }, 
+    {
+        "gen/loss": 0.7232665988936353, 
+        "dis/loss": 0.6804181355148998, 
+        "iteration": 467, 
+        "elapsed_time": 23.05120086669922, 
+        "epoch": 7, 
+        "lin_ratio": 63.3, 
+        "cgan_ratio": 58.8
+    }, 
+    {
+        "gen/loss": 0.7085726287827563, 
+        "dis/loss": 0.6955514861576593, 
+        "iteration": 534, 
+        "elapsed_time": 26.863089084625244, 
+        "epoch": 8, 
+        "lin_ratio": 64.7, 
+        "cgan_ratio": 64.7
+    }, 
+    {
+        "gen/loss": 0.7057808447967876, 
+        "dis/loss": 0.6949392385555037, 
+        "iteration": 600, 
+        "elapsed_time": 30.664182901382446, 
+        "epoch": 9, 
+        "lin_ratio": 66.3, 
+        "cgan_ratio": 66.2
+    }, 
+    {
+        "gen/loss": 0.7141073346138, 
+        "dis/loss": 0.6808937343198862, 
+        "iteration": 667, 
+        "elapsed_time": 34.442014932632446, 
+        "epoch": 10, 
+        "lin_ratio": 61.0, 
+        "cgan_ratio": 76.0
+    }, 
+    {
+        "gen/loss": 0.7040711783651096, 
+        "dis/loss": 0.6797448325513015, 
+        "iteration": 734, 
+        "elapsed_time": 38.221293926239014, 
+        "epoch": 11, 
+        "lin_ratio": 61.5, 
+        "cgan_ratio": 71.8
+    }, 
+    {
+        "gen/loss": 0.6893915109562151, 
+        "dis/loss": 0.6878046465642524, 
+        "iteration": 800, 
+        "elapsed_time": 42.014113903045654, 
+        "epoch": 12, 
+        "lin_ratio": 64.3, 
+        "cgan_ratio": 72.0
+    }, 
+    {
+        "gen/loss": 0.6888523751230382, 
+        "dis/loss": 0.6865388955642928, 
+        "iteration": 867, 
+        "elapsed_time": 45.78665900230408, 
+        "epoch": 13, 
+        "lin_ratio": 63.4, 
+        "cgan_ratio": 64.2
+    }, 
+    {
+        "gen/loss": 0.7015833489930452, 
+        "dis/loss": 0.6785207648775471, 
+        "iteration": 934, 
+        "elapsed_time": 49.58069205284119, 
+        "epoch": 14, 
+        "lin_ratio": 65.7, 
+        "cgan_ratio": 61.199999999999996
+    }, 
+    {
+        "gen/loss": 0.7043796181678772, 
+        "dis/loss": 0.681417060620857, 
+        "iteration": 1000, 
+        "elapsed_time": 53.352632999420166, 
+        "epoch": 15, 
+        "lin_ratio": 64.3, 
+        "cgan_ratio": 60.4
+    }, 
+    {
+        "gen/loss": 0.707309387513061, 
+        "dis/loss": 0.6860164750867815, 
+        "iteration": 1067, 
+        "elapsed_time": 57.141666889190674, 
+        "epoch": 16, 
+        "lin_ratio": 65.3, 
+        "cgan_ratio": 62.2
+    }, 
+    {
+        "gen/loss": 0.7162175525480242, 
+        "dis/loss": 0.6818721321091723, 
+        "iteration": 1134, 
+        "elapsed_time": 60.911051988601685, 
+        "epoch": 17, 
+        "lin_ratio": 62.8, 
+        "cgan_ratio": 62.0
+    }, 
+    {
+        "gen/loss": 0.7233778409885637, 
+        "dis/loss": 0.6751645044846968, 
+        "iteration": 1200, 
+        "elapsed_time": 64.68567299842834, 
+        "epoch": 18, 
+        "lin_ratio": 62.9, 
+        "cgan_ratio": 64.8
+    }, 
+    {
+        "gen/loss": 0.7219572262977486, 
+        "dis/loss": 0.6733691158579357, 
+        "iteration": 1267, 
+        "elapsed_time": 68.45830702781677, 
+        "epoch": 19, 
+        "lin_ratio": 62.6, 
+        "cgan_ratio": 70.1
+    }, 
+    {
+        "gen/loss": 0.70735529554424, 
+        "dis/loss": 0.6821061844256386, 
+        "iteration": 1334, 
+        "elapsed_time": 72.23748707771301, 
+        "epoch": 20, 
+        "lin_ratio": 66.2, 
+        "cgan_ratio": 71.39999999999999
+    }
+]

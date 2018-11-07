@@ -5,8 +5,14 @@ from chainer import functions as F
 from chainer import Variable
 import testing_model
 
+#setting continous
+def rnd_continuous(n, n_continuous, mu=0, std=1):
+    return np.random.normal(mu, std, size=(n, n_continuous))
+
+
 class GANUpdater(training.StandardUpdater):
     def __init__(self, iterator, noise_iterator, noise_dim,
+                 continuous_dim,
                  x_dim, xi_dim, experiment,
                  optimizer_generator,
                  optimizer_discriminator, device=-1):
@@ -18,6 +24,7 @@ class GANUpdater(training.StandardUpdater):
         super(GANUpdater,self).__init__(iterators, optimizers, device=device)
         self.epoch_counter=0
         self.noise_dim=noise_dim
+        self.continuous_dim=continuous_dim
         self.x_dim = x_dim
         self.xi_dim = xi_dim
         self.experiment = experiment
@@ -34,28 +41,51 @@ class GANUpdater(training.StandardUpdater):
         x_real_it = self._iterators['main'].next()
         x_real = self.converter(x_real_it, self.device)
 
-        x_real_x  = x_real[:,:self.x_dim]
+        x_real_x = x_real[:,:self.x_dim]
+
         x_real_xi = x_real[:,self.x_dim:]
-        y_real = self.discriminator(Variable(x_real_xi),Variable(x_real_x))
-        
+        y_real, _ = self.discriminator(Variable(x_real_xi),Variable(x_real_x))
         z_it = self._iterators['z'].next()
         z = self.converter(z_it, self.device)
 
         x_fake = self.generator(Variable(z),Variable(x_real_x))
-        y_fake = self.discriminator(x_fake,Variable(x_real_x))
+        y_fake, mi = self.discriminator(x_fake,Variable(x_real_x))
+
+        #print("y fake")
+        #print(y_fake)
 
         if test:
             return x_fake
         else:
-            return y_fake, y_real
+            return y_fake, mi, y_real
 
-    def backward(self, y):
-        y_fake, y_real = y
-
+    def backward(self, y_fake, mi, y_real):
+        
         generator_loss = F.softmax_cross_entropy(y_fake,Variable(np.ones(y_fake.shape[0], dtype=np.int32)))
         discriminator_loss = F.softmax_cross_entropy(y_fake,Variable(np.zeros(y_fake.shape[0], dtype=np.int32)))
         discriminator_loss += F.softmax_cross_entropy(y_real,Variable(np.ones(y_real.shape[0], dtype=np.int32)))
-        discriminator_loss /= 2
+        discriminator_loss /= 2                
+
+        mi = mi.data
+        #print("mi:")
+        #print(mi.shape)
+
+        # Mutual Information loss
+        # Sample continuous codes to learn rotation, thickness, etc.
+        c_continuous = np.asarray(rnd_continuous(mi.shape[0], mi.shape[1]), dtype=np.float32)
+
+        # Continuous loss - Fix standard deviation to 1, i.e. log variance is 0
+        mi_continuous_ln_var = np.empty_like(mi, dtype=np.float32)
+        mi_continuous_ln_var.fill(1)
+        # mi_continuous_ln_var.fill(1e-6)
+        continuous_loss = F.gaussian_nll(mi, Variable(c_continuous), Variable(mi_continuous_ln_var))
+        continuous_loss /= mi.shape[0]
+
+        #print("continuous_loss:")
+        #print(continuous_loss)
+
+        #generator_loss += categorical_loss
+        generator_loss += continuous_loss
 
         return {'gen': generator_loss, 'dis': discriminator_loss}
 
@@ -72,10 +102,11 @@ class GANUpdater(training.StandardUpdater):
         if self.epoch==self.epoch_counter:
             self.epoch_counter+=1
             if self.experiment=="random_left_right":
-                result=testing_model.test(self.generator,50000,self.noise_dim)
+                #print("update core!!")
+                result=testing_model.test(self.generator,50000,self.noise_dim, self.continuous_dim)
                 serializers.save_npz("results/models/tmp/"+str(self.epoch_counter-1)+"_gen.model",self.generator)
                 reporter.report({'lin_ratio': result[0]})
-                reporter.report({'cgan_ratio': result[1]})
+                reporter.report({'infogan_ratio': result[1]})
                 reporter.report({'diff_ratio': result[2]})
                 f=open('results/f1_metric.dat','a')
                 f.write(str(result[0])+" "+str(result[1])+" "+str(result[2])+"\n")
@@ -83,7 +114,8 @@ class GANUpdater(training.StandardUpdater):
                 
             pass
 
-        losses = self.backward(self.forward())
+        y_fake, mi, y_real = self.forward()
+        losses = self.backward(y_fake, mi, y_real)
         self.update_params(losses, report=True)
 
 
@@ -143,10 +175,10 @@ class WassersteinGANUpdater(training.StandardUpdater):
         if self.epoch==self.epoch_counter:
             self.epoch_counter+=1
             if self.experiment=="random_left_right":
-                result=testing_model.test(self.generator,50000,self.noise_dim)
+                result=testing_model.test(self.generator,50,self.noise_dim)
                 serializers.save_npz("results/models/tmp/"+str(self.epoch_counter-1)+"_gen.model",self.generator)
                 reporter.report({'lin_ratio': result[0]})
-                reporter.report({'cgan_ratio': result[1]})
+                reporter.report({'infogan_ratio': result[1]})
                 reporter.report({'diff_ratio': result[2]})
                 f=open('results/f1_metric.dat','a')
                 f.write(str(result[0])+" "+str(result[1])+" "+str(result[2])+"\n")
