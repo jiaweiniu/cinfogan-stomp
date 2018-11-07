@@ -80,7 +80,7 @@ def stomp(q_start, q_goal, ξ, n_timesteps, K, R_inv, M,
         print("Finished")
 
     if record_list_ξ:
-        return list_ξ
+        return list_ξ, m
 
     else:
-        return ξ
+        return ξ, m

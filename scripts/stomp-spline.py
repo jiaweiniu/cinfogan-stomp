@@ -5,6 +5,9 @@ from stomp import stomp
 from initial_trajectory import cinfogan_initial_traj, linear_initial_traj 
 from animation_stomp import animation_stomp
 from tqdm import tqdm
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     #--- STOMP parameters ---#
@@ -33,30 +36,50 @@ if __name__ == '__main__':
     for i in range(n_timesteps):
         M[:,i]=R_inv[:,i]/(n_timesteps*max(R_inv[:,i]))
 
-    #--- Problem x definition ---#
-    q_start=np.asarray([0.1,0.16])
-    q_goal=np.asarray([0.76,0.88])
-    obstacles=[[0.5,0.78],[0.6,0.5],[0.3,0.3]]
-
     record_list_ξ = False
     verbose=False
-    for i in tqdm(range(10)):
+    n_experiments = 200
+    data=[]
+    
+    for i in tqdm(range(n_experiments)):
+        #--- Problem x definition ---#
+        radius=0.1
+        obstacles=np.random.random((3,2))
+        wrong_setup=True
+        while wrong_setup:
+            q_start=np.random.random(2)
+            q_goal=np.random.random(2)
+            collide = False
+
+            for obs in obstacles:
+                if np.linalg.norm(q_start-obs)<radius or np.linalg.norm(q_goal-obs)<radius:
+                    collide=True
+                    
+            if not(collide):
+                wrong_setup=False
+    
         start_time=time.time()
         ξ_0 = linear_initial_traj(q_start, q_goal, n_timesteps)
 
         if record_list_ξ:
-            list_ξ = stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M,
-                           n_iter, obstacles, dt, record_list_ξ)
+            list_ξ, iterations = stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M,
+                                       n_iter, obstacles, dt, record_list_ξ)
 
             end_time = time.time()
             animation_stomp(q_start, q_goal, obstacles, list_ξ)
 
         else:
-            ξ = stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M,
-                      n_iter, obstacles, dt, record_list_ξ)
+            ξ, iterations = stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M,
+                                  n_iter, obstacles, dt, record_list_ξ)
             end_time = time.time()
 
+        data.append(["Linear", end_time-start_time, iterations])
         if verbose:
             print()
             print("--- %s seconds ---" %(end_time-start_time))
 
+    df =  pd.DataFrame(data=data, columns=["Initialization", "Time","Iterations"])
+
+    sns.boxplot(x="Initialization", y="Time", data=df, showfliers=False)
+
+    plt.show()
