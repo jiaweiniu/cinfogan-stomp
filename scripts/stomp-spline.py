@@ -8,7 +8,6 @@ from scipy import interpolate
 from matplotlib.lines import Line2D
 import time
 
-start_time=time.time()
 def cost(trajectory,obstacles,dt):
     final_cost=np.zeros(trajectory.shape[1])    
 
@@ -29,7 +28,7 @@ def cost(trajectory,obstacles,dt):
 def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
     print()
     print("Start point : "+str(q_start) +"   Goal point : "+str(q_goal))
-    print()
+    print("Generation of initial trajectory")
 
     # Initialization (set initial trajectory)
 
@@ -50,20 +49,17 @@ def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
    
     #func = interpolate.interp1d(theta_x,theta_y,kind='quadratic')
     func = interpolate.spline(theta_x,theta_y,xnew)
-    print(func)
 
     ynew = func
 
     theta = np.array([xnew,ynew])
 
-    print("Initial trajectory")
-    print()
-    print(theta)
-    print()
 
     list_theta=[]   # create a []
 
-    list_theta.append(theta)   # [[theta]] 
+    list_theta.append(theta)   # [[theta]]
+
+    print("Beginning of STOMP")
     m=0
     while(np.sum(cost(theta,obstacles,dt))>2 and m<n_iter):
         zero_mean=np.zeros(n_timesteps)
@@ -110,7 +106,7 @@ def stomp(q_start,q_goal,n_timesteps,K,n_iter,obstacles,dt):
             continue
             
         else:
-            print("finished")
+            print("Finished")
             break
 
             
@@ -149,12 +145,11 @@ n_iter=30
 
 
 obstacles=[[0.5,0.78],[0.6,0.5],[0.3,0.3]]
-#print "obstacle1"
-#print obstacles[0][1]
-#obstacles=[[0.5,0.78],[0.6,0.5],[0.3,0.3],[0.2,0.5]]
 
+start_time=time.time()
 traj_list=stomp(q_start,q_goal,n_timesteps,n_noisy,n_iter,obstacles,dt)
-print(traj_list[-1])
+print()
+print("--- %s seconds ---" %(time.time()-start_time))
 
 fig=plt.figure()
 ax = fig.add_subplot(111, aspect='equal')
@@ -183,8 +178,6 @@ def update(i,line):
     return line,
 
 ani = animation.FuncAnimation(fig, update, frames=len(traj_list)//2,blit=False,fargs=[line])
-
-print("--- %s seconds ---" %(time.time()-start_time))
 
 ax.get_xaxis().set_visible(False)
 ax.get_yaxis().set_visible(False)
