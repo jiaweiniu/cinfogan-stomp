@@ -52,6 +52,15 @@ class GeneratorSample(extension.Extension):
             ax.set_ylim((0,1))
             ax.set_aspect('equal')
 
+        if (epochs == 2):
+
+            print("generated point1")
+            print(xi_gen[+0],xi_gen[1])
+            print("generated point2")
+            print(xi_gen[2],xi_gen[3])
+            print("generated point3")
+            print(xi_gen[4],xi_gen[5])
+
 
             filename = '{}.{}'.format(trainer.updater.epoch,
                                   self._sample_format)

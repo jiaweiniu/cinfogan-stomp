@@ -130,7 +130,6 @@ else:
     print_report_args = ['epoch', 'gen/loss', 'dis/loss',
                              'lin_ratio','infogan_ratio','diff_ratio']
 
-
 trainer.extend(extensions.PrintReport(print_report_args))
 trainer.extend(extensions.ProgressBar())
 if configuration["experiment"] == "random_left_right":

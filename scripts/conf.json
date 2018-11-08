@@ -1,7 +1,7 @@
 {
     "experiment": "random_left_right",
     "n_data": 60000,
-    "n_epochs": 50,
+    "n_epochs": 5,
     "n_categorical": 0,
     "n_continuous": 2,
     "n_batchsize": 135,
