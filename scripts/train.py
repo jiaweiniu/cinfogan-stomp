@@ -43,17 +43,10 @@ else:
         xi_dim=7
    
 train = import_dataset.import_data(configuration, x_dim, xi_dim)
-
-
 train_iter = iterators.SerialIterator(train, batch_size)
-
-
-
 z_iter = iterators.RandomNoiseIterator(UniformNoiseGenerator(-1, 1, n_z+n_continuous), batch_size)
 
-
 print("load the data")
-
 
 # Creating the Neural Networks models
 
@@ -76,14 +69,11 @@ if configuration["wasserstein"]:
     print("Using Wasserstein")
     optimizer_generator = optimizers.RMSprop(lr=0.00005)
     optimizer_critic = optimizers.RMSprop(lr=0.00005)
-
     a=xp.zeros((1,xi_dim)).astype(xp.float32)
     b=xp.zeros((1,x_dim)).astype(xp.float32)
     critic(Variable(a),Variable(b))
-        
     optimizer_generator.setup(gen)
     optimizer_critic.setup(critic)
-
     updater = WassersteinGANUpdater(
         iterator=train_iter,
         noise_iterator=z_iter,
@@ -117,32 +107,37 @@ else:
     )
 
 print("setup trainer...")
+
 trainer = training.Trainer(updater, stop_trigger=(epochs, 'epoch'))
 
 trainer.out="../results" # changing the name because we do multiple experiments
+
 trainer.extend(extensions.LogReport())
 
-    
 if configuration["wasserstein"]:        
     print_report_args = ['epoch', 'gen/loss', 'cri/loss',
                              'lin_ratio','infogan_ratio','diff_ratio']
 else:
     print_report_args = ['epoch', 'gen/loss', 'dis/loss',
                              'lin_ratio','infogan_ratio','diff_ratio']
+#print(epochs)
 
 trainer.extend(extensions.PrintReport(print_report_args))
+
 trainer.extend(extensions.ProgressBar())
+
 if configuration["experiment"] == "random_left_right":
     trainer.extend(extensions.GeneratorSample(configuration, x_dim,
                                                   xi_dim, n_z, n_continuous), trigger=(1, 'epoch'))
-
-
-# We delete the f1_metric.dat file to be sure we do not mixed multiple experiment data.
-
+print("end")
+for i in str(epochs):
+    print(i)
+print("begin")
 cmd = "touch ../results/f1_metric.dat && rm ../results/f1_metric.dat"
 os.system(cmd)
 
 print("START TRAINING!!")
+
 trainer.run()
 
 if configuration["output_name"] != "":
@@ -153,6 +148,7 @@ else:
 # Saving the models
 
 serializers.save_npz("../results/models/"+output_name+"_gen.model",gen)
+
 if configuration["wasserstein"]:
     serializers.save_npz("../results/models/"+output_name+"_cri.model",critic)
 else:

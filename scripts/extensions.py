@@ -1,4 +1,6 @@
 import os
+import json
+import argparse
 from chainer import training, cuda, Variable, serializers
 from chainer.training import extension
 import scipy.misc
@@ -18,7 +20,6 @@ class GeneratorSample(extension.Extension):
         self.x_dim=x_dim
         self.xi_dim=xi_dim
         self.configuration=configuration
-        
     def __call__(self, trainer):
         dirname = os.path.join(trainer.out, self._dirname)
         if (trainer.updater.epoch%1==0):            
@@ -42,7 +43,7 @@ class GeneratorSample(extension.Extension):
             ax.add_patch(circle)
            
 
-            ax.plot([start[0],xi_gen[+0],xi_gen[2],xi_gen[4],goal[0]],[start[1],xi_gen[1],xi_gen[3],xi_gen[5],goal[1]],marker='*')
+            ax.plot([start[0],xi_gen[0],xi_gen[2],xi_gen[4],goal[0]],[start[1],xi_gen[1],xi_gen[3],xi_gen[5],goal[1]],marker='*')
             
             ax.scatter(start[0],start[1],marker="s",s=130,color="black",zorder=20)
 
@@ -53,13 +54,27 @@ class GeneratorSample(extension.Extension):
             ax.set_aspect('equal')
 
 
+            print("generated point1")
+            print(xi_gen[0],xi_gen[1])
+            print("generated point2")
+            print(xi_gen[2],xi_gen[3])
+            print("generated point3")
+            print(xi_gen[4],xi_gen[5])
+            if configuration["experiment"] == "random_left_right":
+                trainer.extend(extensions.GeneratorSample(configuration, x_dim,
+                                                          xi_dim, n_z, n_continuous), trigger=(1, 'epoch'))
+
+            cmd = "touch ../results/xi_gen.dat && rm ../results/xi_gen.dat"
+            os.system(cmd)
+            
             filename = '{}.{}'.format(trainer.updater.epoch,
-                                  self._sample_format)
+                                      self._sample_format)
             filename = os.path.join(dirname, filename)
         
             plt.savefig(filename)
             plt.close()
             serializers.save_npz("../results/models/"+str(trainer.updater.epoch)+".model",trainer.updater.generator)
+            return xi_gen
       
     def sample(self, trainer):
         x = trainer.updater.forward(test=True)
