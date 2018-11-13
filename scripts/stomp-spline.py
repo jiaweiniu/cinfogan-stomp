@@ -60,6 +60,7 @@ if __name__ == '__main__':
     
         start_time=time.time()
         ξ_0 = linear_initial_traj(q_start, q_goal, n_timesteps)
+        ξ_0 = cinfogan_initial_traj(q_start, q_goal, n_timesteps)
 
         if record_list_ξ:
             list_ξ, iterations = stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M,

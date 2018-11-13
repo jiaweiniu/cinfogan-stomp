@@ -1,0 +1,12 @@
+[
+    {
+        "lin_ratio": 64.482,
+        "infogan_ratio": 74.102,
+        "gen/loss": 4.049500078029847,
+        "diff_ratio": -9.620000000000005,
+        "dis/loss": 0.6959669706526767,
+        "epoch": 1,
+        "iteration": 445,
+        "elapsed_time": 16.945366023108363
+    }
+]

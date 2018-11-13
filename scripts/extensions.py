@@ -1,6 +1,4 @@
 import os
-import json
-import argparse
 from chainer import training, cuda, Variable, serializers
 from chainer.training import extension
 import scipy.misc
@@ -22,7 +20,8 @@ class GeneratorSample(extension.Extension):
         self.configuration=configuration
     def __call__(self, trainer):
         dirname = os.path.join(trainer.out, self._dirname)
-        if (trainer.updater.epoch%1==0):            
+        if (trainer.updater.epoch%1==0):
+            
             n_gen=1
             z=Variable(np.random.uniform(-1,1,(n_gen,self.noise_dim+self.n_continuous)).astype(np.float32))
             dataset=import_dataset.import_data(self.configuration,self.x_dim,self.xi_dim)
@@ -42,7 +41,6 @@ class GeneratorSample(extension.Extension):
             circle = patches.Circle((0.3,0.3), radius=0.1, color='red',alpha=0.6)
             ax.add_patch(circle)
            
-
             ax.plot([start[0],xi_gen[0],xi_gen[2],xi_gen[4],goal[0]],[start[1],xi_gen[1],xi_gen[3],xi_gen[5],goal[1]],marker='*')
             
             ax.scatter(start[0],start[1],marker="s",s=130,color="black",zorder=20)
@@ -52,20 +50,14 @@ class GeneratorSample(extension.Extension):
             ax.set_xlim((0,1))
             ax.set_ylim((0,1))
             ax.set_aspect('equal')
-
-
-            print("generated point1")
-            print(xi_gen[0],xi_gen[1])
-            print("generated point2")
-            print(xi_gen[2],xi_gen[3])
-            print("generated point3")
-            print(xi_gen[4],xi_gen[5])
-            if configuration["experiment"] == "random_left_right":
-                trainer.extend(extensions.GeneratorSample(configuration, x_dim,
-                                                          xi_dim, n_z, n_continuous), trigger=(1, 'epoch'))
-
-            cmd = "touch ../results/xi_gen.dat && rm ../results/xi_gen.dat"
-            os.system(cmd)
+            if (trainer.updater.epoch ==2):    
+                print("Initial trajectory point")
+                print("generated point1")
+                print(xi_gen[0],xi_gen[1])
+                print("generated point2")
+                print(xi_gen[2],xi_gen[3])
+                print("generated point3")
+                print(xi_gen[4],xi_gen[5])
             
             filename = '{}.{}'.format(trainer.updater.epoch,
                                       self._sample_format)
@@ -74,7 +66,7 @@ class GeneratorSample(extension.Extension):
             plt.savefig(filename)
             plt.close()
             serializers.save_npz("../results/models/"+str(trainer.updater.epoch)+".model",trainer.updater.generator)
-            return xi_gen
+            
       
     def sample(self, trainer):
         x = trainer.updater.forward(test=True)
