@@ -1,8 +1,8 @@
 bin/*
+local/*
 dataset/*
 include/*
 lib/*
-local/*
 man/*
 results/*
 pip-selfcheck.json
