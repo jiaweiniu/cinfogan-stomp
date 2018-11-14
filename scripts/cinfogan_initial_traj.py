@@ -69,15 +69,15 @@ or np.linalg.norm(obs[0]-obs[1])<radius or np.linalg.norm(obs[1]-obs[2])<radius 
     ax.set_xlim((0,1))
     ax.set_ylim((0,1))
     plt.show()
-'''
+
 def cinfogan_initial_traj(q_start, q_goal, n_timesteps):
     t = np.linspace(0,1,n_timesteps)       # divided by timesteps times between 0 to 1    
      
-    point_1 = np.array([xi_gen[0], xi_gen[1]])
-    point_2 = np.array([xi_gen[2], xi_gen[3]])
-    point_3 = np.array([xi_gen[4], xi_gen[5]])
+    point_1 = np.array([xi[0], xi[1]])
+    point_2 = np.array([xi[2], xi[3]])
+    point_3 = np.array([xi[4], xi[5]])
 
-    print("Initial trajectory points1")
+    print("Initial trajectory points")
     print (point_1,point_2,point_3) 
     ξ_x = np.array([q_start[0],point_1[0],point_2[0],point_3[0],q_goal[0]])
     ξ_y = np.array([q_start[1],point_1[1],point_2[1],point_3[1],q_goal[1]])
@@ -87,4 +87,4 @@ def cinfogan_initial_traj(q_start, q_goal, n_timesteps):
 
     ξ_0 = np.array([xnew,ynew])
     return ξ_0
-'''
+
