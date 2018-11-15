@@ -2,7 +2,8 @@ import numpy as np
 from numpy import linalg as LA
 import time
 from stomp import stomp
-from initial_trajectory import cinfogan_initial_traj, linear_initial_traj 
+from initial_trajectory import cinfogan_initial_traj, linear_initial_traj
+from cinfogan_initial_traj import gen_points
 from animation_stomp import animation_stomp
 from tqdm import tqdm
 import pandas as pd
@@ -60,8 +61,7 @@ if __name__ == '__main__':
     
         start_time=time.time()
         ξ_0 = linear_initial_traj(q_start, q_goal, n_timesteps)
-        ξ_0 = cinfogan_initial_traj(q_start, q_goal, n_timesteps)
-
+        #ξ_0 = cinfogan_initial_traj(q_start, q_goal, n_timesteps)
         if record_list_ξ:
             list_ξ, iterations = stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M,
                                        n_iter, obstacles, dt, record_list_ξ)
@@ -75,6 +75,7 @@ if __name__ == '__main__':
             end_time = time.time()
 
         data.append(["Linear", end_time-start_time, iterations])
+        #data.append(["Cinfogan", end_time-start_time, iterations])
         if verbose:
             print()
             print("--- %s seconds ---" %(end_time-start_time))
