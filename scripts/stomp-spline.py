@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     record_list_ξ = False
     verbose=False
-    n_experiments = 500
+    n_experiments = 100
     data=[]
     
     for i in tqdm(range(n_experiments)):
@@ -48,8 +48,8 @@ if __name__ == '__main__':
         obstacles=np.random.random((3,2))
         wrong_setup=True
         while wrong_setup:
-            q_start=np.random.random(2)
-            q_goal=np.random.random(2)
+            q_start=0.1*np.random.random(2)
+            q_goal=1-np.random.random(2)*0.1
             collide = False
 
             for obs in obstacles:
@@ -75,7 +75,7 @@ if __name__ == '__main__':
             end_time = time.time()
 
         data.append(["Linear", end_time-start_time, iterations])
-        #data.append(["Cinfogan", end_time-start_time, iterations])
+        #data.append(["CInfoGAN", end_time-start_time, iterations])
         if verbose:
             print()
             print("--- %s seconds ---" %(end_time-start_time))
