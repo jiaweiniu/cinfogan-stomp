@@ -6,12 +6,6 @@ import copy
 from matplotlib.lines import Line2D
 
 
-
-
-
-
-
-
 # Initialization (set initial trajectory)
 n_timesteps=20
 
@@ -27,15 +21,6 @@ print "Initial trajectory"
 print
 print theta
 print
-
-   
-   
-
-
-
-
-
-
 
 
 obstacles=[[0.5,0.78],[0.6,0.5],[0.3,0.3]]
