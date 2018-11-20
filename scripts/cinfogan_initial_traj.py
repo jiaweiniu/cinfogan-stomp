@@ -9,21 +9,55 @@ import matplotlib.patches as patches
 import matplotlib.pyplot as plt
 
 
-def gen_points(gen,obstacles,q_start,q_goal):
+def gen_points():
     n_tests = 1
     n_z = 60
     n_continuous = 2
+    gen = Generator(60,12,6,2,100)
+    gen = serializers.load_npz("../results/models/40.model",gen)
     z = np.random.uniform(-2, 2, (n_tests,n_z+n_continuous)) # noise and latent code
     z = Variable(np.array(z, dtype=np.float32))
     x = np.random.uniform(0.0, 1.0,(n_tests,12));  # condition(problem) 
     x = Variable(x.astype(np.float32))
-    #x = Variable(np.array(x, dtype=np.float32))
     xi = gen(z,x)  # generated points
     xi = xi.data[0]
     return xi
 
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 '''
+def gen_points(gen):
+    n_tests = 1
+    
+    x = np.random.uniform(0.0, 1.0,(n_tests,12));  # condition(problem) 
+    x = Variable(x.astype(np.float32))
+    xi = gen(x)  # generated points
+    xi = xi.data[0]
+    return xi
+
+
 if __name__ == '__main__':
     radius = 0.1
     obstacles = np.random.random((3,2))    
@@ -38,7 +72,7 @@ if __name__ == '__main__':
         if not(collide):
             wrong_setup=False
             
-or np.linalg.norm(obs[0]-obs[1])<radius or np.linalg.norm(obs[1]-obs[2])<radius or np.linalg.norm(obs[2]-obs[0])<radius:
+            or np.linalg.norm(obs[0]-obs[1])<radius or np.linalg.norm(obs[1]-obs[2])<radius or np.linalg.norm(obs[2]-obs[0])<radius:
             
 
 

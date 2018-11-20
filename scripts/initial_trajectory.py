@@ -1,26 +1,30 @@
 from scipy import interpolate
 import numpy as np
 import extensions
-from cinfogan_initial_traj import gen_points
-from models import Generator
+#from cinfogan_initial_traj import gen_points
 from chainer import serializers, Variable
-from tqdm import tqdm
     
-
-def cinfogan_initial_traj(q_start, q_goal, n_timesteps):
+def gen_points(gen,n_tests,n_z,n_continuous):
+    z = np.random.uniform(-2, 2, (n_tests, n_z+n_continuous))
+    z = z.astype(np.float32)
+    x = np.random.uniform(0.0, 1.0,(n_tests,12));
+    x = x.astype(np.float32)
+    xi = gen(z,x)
+    xi = xi.data[0]
+    return xi
+   
+def cinfogan_initial_traj(gen, q_start, q_goal, n_timesteps):
     t = np.linspace(0,1,n_timesteps)# divided by timesteps times between 0 to 1
-    gen = Generator(60,12,6,2,100)
-    serializers.load_npz("../results/models/40.model",gen)
-    x = gen_points(gen)
-    point_1 = np.array([x[0], x[1]])
-    point_2 = np.array([x[2], x[3]])
-    point_3 = np.array([x[4], x[5]])
+    xi = gen_points(gen,1,60,2)
+
+
+    point_1 = np.array([xi[0], xi[1]])
+    point_2 = np.array([xi[2], xi[3]])
+    point_3 = np.array([xi[4], xi[5]])
     ξ_x = np.array([q_start[0],point_1[0],point_2[0],point_3[0],q_goal[0]])
     ξ_y = np.array([q_start[1],point_1[1],point_2[1],point_3[1],q_goal[1]])
-
     xnew = np.linspace(q_start[0], q_start[1], n_timesteps)  
     ynew = interpolate.spline(ξ_x,ξ_y,xnew)
-
     ξ_0 = np.array([xnew,ynew])
     return ξ_0
 

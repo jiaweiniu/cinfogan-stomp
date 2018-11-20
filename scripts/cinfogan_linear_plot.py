@@ -2,12 +2,17 @@ import numpy as np
 from numpy import linalg as LA
 import time
 from stomp import stomp
+#from cinfogan_initial_traj import gen_points
 from initial_trajectory import cinfogan_initial_traj, linear_initial_traj
 from animation_stomp import animation_stomp
 from tqdm import tqdm
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from chainer import serializers
+
+from models import Generator
+
 
 if __name__ == '__main__':
     #--- STOMP parameters ---#
@@ -36,11 +41,13 @@ if __name__ == '__main__':
     for i in range(n_timesteps):
         M[:,i]=R_inv[:,i]/(n_timesteps*max(R_inv[:,i]))
 
+    gen = Generator(60,12,6,2,100)
+    serializers.load_npz("../results/models/40.model",gen)
+        
     record_list_ξ = False
     verbose=False
-    n_experiments = 5
     data=[]
-    
+    n_experiments = 100
     for i in tqdm(range(n_experiments)):
         #--- Problem x definition ---#
         radius=0.1
@@ -57,45 +64,47 @@ if __name__ == '__main__':
                     
             if not(collide):
                 wrong_setup=False
+    
         #linear initial trajectory
         start_time=time.time()
         ξ_0 = linear_initial_traj(q_start, q_goal, n_timesteps)
-        
+                
         if record_list_ξ:
             list_ξ, iterations = stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M,
-                                       n_iter, obstacles, dt, record_list_ξ)
-
+                                               n_iter, obstacles, dt, record_list_ξ)
+            
             end_time = time.time()
             animation_stomp(q_start, q_goal, obstacles, list_ξ)
-
+                    
         else:
             ξ, iterations = stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M,
                                   n_iter, obstacles, dt, record_list_ξ)
             end_time = time.time()
+            
+            data.append(["Linear", end_time-start_time, iterations])
 
-        data.append(["Linear", end_time-start_time, iterations])
         #cinfogan initial trajectory
         start_time=time.time()
-        ξ_0 = cinfogan_initial_traj(q_start, q_goal, n_timesteps)
-
+            
+        ξ_0 = cinfogan_initial_traj(gen, q_start, q_goal, n_timesteps)
+            
         if record_list_ξ:
-            list_ξ, iterations = stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M,
-                                       n_iter, obstacles, dt, record_list_ξ)
-
+            list_ξ, iterations = stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M, n_iter, obstacles, dt, record_list_ξ)
+                
             end_time = time.time()
             animation_stomp(q_start, q_goal, obstacles, list_ξ)
-
+                
         else:
             ξ, iterations = stomp(q_start, q_goal, ξ_0, n_timesteps, n_noisy, R_inv, M,
-                                  n_iter, obstacles, dt, record_list_ξ)
+                                      n_iter, obstacles, dt, record_list_ξ)
             end_time = time.time()
             data.append(["CInfoGAN", end_time-start_time, iterations])
-        if verbose:
-            print()
-            print("--- %s seconds ---" %(end_time-start_time))
-
+            if verbose:
+                print()
+                print("--- %s seconds ---" %(end_time-start_time))
+                    
     df =  pd.DataFrame(data=data, columns=["Initialization", "Time","Iterations"])
-
+                    
     sns.boxplot(x="Initialization", y="Time", hue="Initialization",data=df, showfliers=False)
-
+                    
     plt.show()
