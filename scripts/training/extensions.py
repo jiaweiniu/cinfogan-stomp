@@ -50,7 +50,10 @@ class GeneratorSample(extension.Extension):
             ax.set_xlim((0,1))
             ax.set_ylim((0,1))
             ax.set_aspect('equal')
-            if (trainer.updater.epoch ==2):    
+
+            # TODO add verbose option
+            """
+            if (trainer.updater.epoch == 2):    
                 print("Initial trajectory point")
                 print("generated point1")
                 print(xi_gen[0],xi_gen[1])
@@ -58,14 +61,14 @@ class GeneratorSample(extension.Extension):
                 print(xi_gen[2],xi_gen[3])
                 print("generated point3")
                 print(xi_gen[4],xi_gen[5])
-            
+            """
             filename = '{}.{}'.format(trainer.updater.epoch,
                                       self._sample_format)
             filename = os.path.join(dirname, filename)
         
             plt.savefig(filename)
             plt.close()
-            serializers.save_npz("../results/models/"+str(trainer.updater.epoch)+".model",trainer.updater.generator)
+            serializers.save_npz("results/models/"+str(trainer.updater.epoch)+".model",trainer.updater.generator)
             
       
     def sample(self, trainer):

@@ -51,9 +51,6 @@ class GANUpdater(training.StandardUpdater):
         x_fake = self.generator(Variable(z),Variable(x_real_x))
         y_fake, mi = self.discriminator(x_fake,Variable(x_real_x))
 
-        #print("y fake")
-        #print(y_fake)
-
         if test:
             return x_fake
         else:
@@ -67,8 +64,6 @@ class GANUpdater(training.StandardUpdater):
         discriminator_loss /= 2                
 
         mi = mi.data
-        #print("mi:")
-        #print(mi.shape)
 
         # Mutual Information loss
         # Sample continuous codes to learn rotation, thickness, etc.
@@ -104,11 +99,11 @@ class GANUpdater(training.StandardUpdater):
             if self.experiment=="random_left_right":
                 #print("update core!!")
                 result=testing_model.test(self.generator,50000,self.noise_dim, self.continuous_dim)
-                serializers.save_npz("../results/models/tmp/"+str(self.epoch_counter-1)+"_gen.model",self.generator)
+                serializers.save_npz("results/models/tmp/"+str(self.epoch_counter-1)+"_gen.model",self.generator)
                 reporter.report({'lin_ratio': result[0]})
                 reporter.report({'infogan_ratio': result[1]})
                 reporter.report({'diff_ratio': result[2]})
-                f=open('../results/f1_metric.dat','a')
+                f=open('results/f1_metric.dat','a')
                 f.write(str(result[0])+" "+str(result[1])+" "+str(result[2])+"\n")
                 f.close()
                 

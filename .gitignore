@@ -10,3 +10,5 @@ pip-selfcheck.json
 virtualenv/*
 *.gif
 scripts/conf.json
+scripts/training/results/*
+data/rrtconnect/*

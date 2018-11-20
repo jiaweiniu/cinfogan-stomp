@@ -1,6 +1,6 @@
 {
     "experiment": "random_left_right",
-    "n_data": 60000,
+    "n_data": 20000,
     "n_epochs": 5,
     "n_categorical": 0,
     "n_continuous": 2,
@@ -10,7 +10,7 @@
     "wasserstein": false,
     "n_neurons_cri": 50,
     "n_z": 60,
-    "dataset_path": "../../rrtconnect",
+    "dataset_path": "../../data/rrtconnect",
     "output_name": "",
     "gpu": -1
 }
