@@ -40,7 +40,20 @@ class GeneratorSample(extension.Extension):
             ax.add_patch(circle)
             circle = patches.Circle((0.3,0.3), radius=0.1, color='red',alpha=0.6)
             ax.add_patch(circle)
-           
+
+''' # when do not have precise number                        
+            start=[x[0],x[1]]
+            goal=[x[2],x[3]]
+            
+            circle = patches.Circle((x[4],x[5]), radius=0.1, color='red',alpha=0.7)
+            ax.add_patch(circle)
+            circle = patches.Circle((x[6],x[7]), radius=0.1, color='red',alpha=0.7)
+            ax.add_patch(circle)
+            circle = patches.Circle((x[8],x[9]), radius=0.1, color='red',alpha=0.7)
+            ax.add_patch(circle)
+            circle = patches.Circle((x[11],x[10]), radius=0.1, color='red',alpha=0.7)
+            ax.add_patch(circle)
+'''
             ax.plot([start[0],xi_gen[0],xi_gen[2],xi_gen[4],goal[0]],[start[1],xi_gen[1],xi_gen[3],xi_gen[5],goal[1]],marker='*')
             
             ax.scatter(start[0],start[1],marker="s",s=130,color="black",zorder=20)
@@ -62,6 +75,14 @@ class GeneratorSample(extension.Extension):
                 print("generated point3")
                 print(xi_gen[4],xi_gen[5])
             """
+            '''# plot 5 generated trajectories
+            for _ in range(1,5):
+                x=Variable(dataset[136:137,:self.x_dim])
+                z=Variable(np.random.uniform(-1,1,(n_gen,self.noise_dim+self.n_continuous)).astype(np.float32))
+                xi_gen = trainer.updater.generator(z,x).data[0]
+                ax.plot([start[0],xi_gen[0],xi_gen[2],xi_gen[4],goal[0]],[start[1],xi_gen[1],xi_gen[3],xi_gen[5],goal[1]],marker='*')
+            '''  
+
             filename = '{}.{}'.format(trainer.updater.epoch,
                                       self._sample_format)
             filename = os.path.join(dirname, filename)
