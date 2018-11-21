@@ -12,6 +12,9 @@ from chainer import serializers
 from models import CInfoGAN_Generator
 from cgan_model import Cgan_Generator
 
+'''
+   plot computing time that linear, cgan, cinfogan as initial trajectory 
+'''
 #--- STOMP parameters ---#
 if __name__ == '__main__':
     n_timesteps=50

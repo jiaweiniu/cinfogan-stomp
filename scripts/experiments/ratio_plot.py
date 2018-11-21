@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
-
+'''
+    plot avoiding of obstacles in linear and cinfogan
+'''
 fig = plt.figure()
 
 axes = plt.gca()

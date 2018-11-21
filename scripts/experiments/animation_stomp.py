@@ -4,6 +4,10 @@ import matplotlib.patches as patches
 from matplotlib import animation
 from matplotlib.lines import Line2D
 
+'''
+   plot stomp git using cinfogan only in one condition
+'''
+
 def animation_stomp(q_start, q_goal, obstacles, list_ξ):
     fig=plt.figure()
     ax = fig.add_subplot(111, aspect='equal')

@@ -4,8 +4,9 @@ import matplotlib.patches as patches
 from matplotlib import animation
 import copy
 from matplotlib.lines import Line2D
-
-
+'''
+   plot the linear initialization as the initial trajectory 
+'''
 # Initialization (set initial trajectory)
 n_timesteps=20
 

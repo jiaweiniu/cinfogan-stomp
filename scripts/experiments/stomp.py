@@ -1,6 +1,9 @@
 import numpy as np
 import copy
 
+'''
+   define the stomp cost function
+'''
 def cost(trajectory,obstacles,dt):
     final_cost=np.zeros(trajectory.shape[1])    
 

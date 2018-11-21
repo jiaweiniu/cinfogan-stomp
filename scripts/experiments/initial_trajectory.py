@@ -1,9 +1,12 @@
 from scipy import interpolate
 import numpy as np
-import extensions
+#import extensions
 #from cinfogan_initial_traj import gen_points
 from chainer import serializers, Variable
-    
+
+'''
+   the linear, cgan, cinfogan initial trajectory defination
+'''
 def gen_points(gen,n_tests,n_z,n_continuous):
     z = np.random.uniform(-2, 2, (n_tests, n_z+n_continuous))
     z = z.astype(np.float32)
