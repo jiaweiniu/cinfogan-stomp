@@ -36,7 +36,7 @@ class Discriminator(Chain):
 
             fc_mi1_bn=L.BatchNormalization(n_neurons_dis),
             fc_mi2=L.Linear(n_neurons_dis, n_continuous)
-            )
+        )
 
     def __call__(self, x, y):
         h = F.concat([x,y])

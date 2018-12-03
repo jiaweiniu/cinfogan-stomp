@@ -41,19 +41,12 @@ if experiment == "random_left_right":
 else:
         x_dim=14
         xi_dim=7
-   
+
+print("Loading data")
 train = import_dataset.import_data(configuration, x_dim, xi_dim)
-
-
 train_iter = iterators.SerialIterator(train, batch_size)
 
-
-
 z_iter = iterators.RandomNoiseIterator(UniformNoiseGenerator(-1, 1, n_z+n_continuous), batch_size)
-
-
-print("load the data")
-
 
 # Creating the Neural Networks models
 
@@ -134,7 +127,7 @@ else:
 trainer.extend(extensions.PrintReport(print_report_args))
 trainer.extend(extensions.ProgressBar())
 if configuration["experiment"] == "random_left_right":
-    trainer.extend(extensions.GeneratorSample(configuration, x_dim,                                                xi_dim, n_z, n_continuous), trigger=(1, 'epoch'))
+    trainer.extend(extensions.GeneratorSample(configuration, x_dim,                                                xi_dim, n_continuous, n_z, train), trigger=(1, 'epoch'))
 
 
 # We delete the f1_metric.dat file to be sure we do not mixed multiple experiment data.

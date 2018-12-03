@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from tqdm import tqdm
 
 # Import the data from the dataset and apply a normalization
 def import_data(configuration, x_dim, xi_dim):
@@ -7,7 +8,7 @@ def import_data(configuration, x_dim, xi_dim):
     number_of_parameters=x_dim+xi_dim
     dataset=np.zeros((n_data,number_of_parameters))
 
-    for m in range(n_data): 
+    for m in tqdm(range(n_data)): 
         f=open(configuration["dataset_path"]+"/path_"+str(m+1)+".dat",'r')
 
         # x

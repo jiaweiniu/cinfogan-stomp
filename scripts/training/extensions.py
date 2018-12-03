@@ -10,7 +10,7 @@ import matplotlib.patches as patches
 
 class GeneratorSample(extension.Extension):
     def __init__(self, configuration, x_dim, xi_dim, n_continuous,
-                 noise_dim, dirname='samples', sample_format='png'):
+                 noise_dim, dataset, dirname='samples', sample_format='png'):
         self._dirname = dirname
         self._sample_format = sample_format
         self.noise_dim=noise_dim
@@ -18,13 +18,14 @@ class GeneratorSample(extension.Extension):
         self.x_dim=x_dim
         self.xi_dim=xi_dim
         self.configuration=configuration
+        self.dataset = dataset
+
     def __call__(self, trainer):
         dirname = os.path.join(trainer.out, self._dirname)
         if (trainer.updater.epoch%1==0):            
             n_gen=1
             z=Variable(np.random.uniform(-1,1,(n_gen,self.noise_dim+self.n_continuous)).astype(np.float32))
-            dataset=import_dataset.import_data(self.configuration,self.x_dim,self.xi_dim)
-            x=Variable(dataset[1:2,:self.x_dim])
+            x=Variable(self.dataset[1:2,:self.x_dim])
 
             xi_gen = trainer.updater.generator(z,x).data[0]
             fig,ax = plt.subplots(1)
