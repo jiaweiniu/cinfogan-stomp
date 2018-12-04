@@ -54,17 +54,6 @@ if __name__ == '__main__':
     dis = Discriminator(x_dim, xi_dim, n_continuous, n_neurons_dis)
     critic=Critic(x_dim, xi_dim, n_neurons_cri)
 
-    if gpu >= 0:
-        cuda.check_cuda_available()
-        cuda.get_device(gpu).use()
-        generator.to_gpu()
-        discriminator.to_gpu()
-        xp = cuda.cupy
-    else:
-        xp = np
-
-
-
     if configuration["wasserstein"]:
         print("Using Wasserstein")
         optimizer_generator = optimizers.RMSprop(lr=0.00005)
@@ -130,8 +119,8 @@ if __name__ == '__main__':
         trainer.extend(extensions.GeneratorSample(configuration, x_dim,                                                xi_dim, n_continuous, n_z, train), trigger=(1, 'epoch'))
 
 
-    # We delete the f1_metric.dat file to be sure we do not mixed multiple experiment data.
-    cmd = "touch results/f1_metric.dat && rm results/f1_metric.dat"
+    # We delete the f_metric.dat file to be sure we do not mixed multiple experiment data.
+    cmd = "touch results/f_metric.dat && rm results/f_metric.dat"
     os.system(cmd)
 
     print("START TRAINING!!")

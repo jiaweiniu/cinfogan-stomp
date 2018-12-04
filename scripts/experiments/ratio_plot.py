@@ -15,7 +15,7 @@ measure_lin=[]
 measure_infogan=[]
 n_lines=0
 
-with open("results/linear-infogan.dat",'r') as f:
+with open("../training/results/f_metric.dat",'r') as f:
     for i, l in enumerate(f):
         str_tmp=str.split(l.strip())
         ratio_lin.append(float(str_tmp[0]))

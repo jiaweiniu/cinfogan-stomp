@@ -103,7 +103,7 @@ class GANUpdater(training.StandardUpdater):
                 reporter.report({'lin_ratio': result[0]})
                 reporter.report({'infogan_ratio': result[1]})
                 reporter.report({'diff_ratio': result[2]})
-                f=open('results/f1_metric.dat','a')
+                f=open('results/f_metric.dat','a')
                 f.write(str(result[0])+" "+str(result[1])+" "+str(result[2])+"\n")
                 f.close()
                 
