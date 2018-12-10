@@ -7,6 +7,16 @@ import matplotlib.pyplot as plt
 import import_dataset
 import matplotlib.patches as patches
 
+def saving_model(trainer, i):
+    serializers.save_npz("result/models_"+str(i)+"/epoch_"+str(trainer.updater.epoch),trainer.updater.get_optimizer('main').target)
+    with open("../configuration.yaml",'r') as yamlfile:
+        cfg = yaml.load(yamlfile)
+    model_info = {"manifold_dim": cfg["projection"]["manifold_dim"],
+                  "encoder_layers": cfg["cvae_training"]["encoder_layers"],
+                  "decoder_layers": cfg["cvae_training"]["decoder_layers"],
+                  "noisedim": cfg["cvae_training"]["noisedim"]}
+    with open("result/models_"+str(i)+"/info_epoch_"+str(trainer.updater.epoch)+".yaml", "w") as f:
+        yaml.dump(model_info,f)
 
 class GeneratorSample(extension.Extension):
     def __init__(self, configuration, x_dim, xi_dim, n_continuous,

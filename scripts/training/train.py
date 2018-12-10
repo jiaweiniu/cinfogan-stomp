@@ -2,11 +2,11 @@ import os
 import json
 import argparse
 from chainer import Variable,datasets, training, iterators, optimizers, serializers
-from chainer.training import updater, extensions
+from chainer.training import updater, extensions, Trainer
 from iterators import RandomNoiseIterator, UniformNoiseGenerator
 from models import Generator, Discriminator, Critic
 from updaters import GANUpdater, WassersteinGANUpdater
-from extensions import GeneratorSample
+from extensions import GeneratorSample, saving_model
 import numpy as np
 import import_dataset
 
@@ -14,13 +14,9 @@ iterators.RandomNoiseIterator = RandomNoiseIterator
 updater.GANUpdater = GANUpdater
 extensions.GeneratorSample = GeneratorSample
 
-#setting parameters
 
-if __name__ == '__main__':
-    with open(os.path.join("conf.json")) as fd:
-        json_data = json.load(fd)
-    configuration=json_data
-    
+def training(configuration, i):
+    #setting parameters
     batch_size = configuration["n_batchsize"]
     epochs     = configuration["n_epochs"]
     n_z  = configuration["n_z"]
@@ -32,7 +28,7 @@ if __name__ == '__main__':
     n_neurons_cri  = configuration["n_neurons_cri"]
     gpu = configuration["gpu"]
     output_name = configuration["output_name"]
-    
+
     #import the training data 
 
     if experiment == "random_left_right":
@@ -95,13 +91,15 @@ if __name__ == '__main__':
             experiment=configuration["experiment"],
             optimizer_generator=optimizer_generator,
             optimizer_discriminator=optimizer_discriminator,
+            collision_measure=configuration["collision_measure"],
+            saving_directory="results/models_"+str(i),
             device=gpu
         )
 
     print("setup trainer...")
-    trainer = training.Trainer(updater, stop_trigger=(epochs, 'epoch'))
-
-    trainer.out="results" # changing the name because we do multiple experiments
+    trainer = Trainer(updater, stop_trigger=(epochs, 'epoch'))
+    
+    trainer.out="results/models_"+str(i) # changing the name because we do multiple experiments
     trainer.extend(extensions.LogReport())
 
     
@@ -115,7 +113,7 @@ if __name__ == '__main__':
 
     trainer.extend(extensions.PrintReport(print_report_args))
     trainer.extend(extensions.ProgressBar())
-    if configuration["experiment"] == "random_left_right":
+    if configuration["collision_measure"] != 0:
         trainer.extend(extensions.GeneratorSample(configuration, x_dim,                                                xi_dim, n_continuous, n_z, train), trigger=(1, 'epoch'))
 
 
@@ -129,15 +127,12 @@ if __name__ == '__main__':
     if configuration["output_name"] != "":
         output_name=configuration["output_name"]
     else:
-        output_name=str(configuration["experiment"])
+        output_name=str(configuration["experiment"])   
 
-    # Saving the models
 
-    serializers.save_npz("results/models/"+output_name+"_gen.model",gen)
-    if configuration["wasserstein"]:
-        serializers.save_npz("results/models/"+output_name+"_cri.model",critic)
-    else:
-        serializers.save_npz("results/models/"+output_name+"_dis.model",dis)
-
+if __name__ == '__main__':
+    with open(os.path.join("conf.json")) as fd:
+        json_data = json.load(fd)
+    configuration=json_data
+    training(configuration)
     
-

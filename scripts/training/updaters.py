@@ -15,7 +15,7 @@ class GANUpdater(training.StandardUpdater):
                  continuous_dim,
                  x_dim, xi_dim, experiment,
                  optimizer_generator,
-                 optimizer_discriminator, device=-1):
+                 optimizer_discriminator, collision_measure, saving_directory, device=-1):
 
         iterators = {'main': iterator, 'z': noise_iterator}
         optimizers = {'gen': optimizer_generator,
@@ -28,6 +28,8 @@ class GANUpdater(training.StandardUpdater):
         self.x_dim = x_dim
         self.xi_dim = xi_dim
         self.experiment = experiment
+        self.collision_measure = collision_measure
+        self.saving_directory = saving_directory
         
     @property
     def generator(self):
@@ -96,10 +98,9 @@ class GANUpdater(training.StandardUpdater):
     def update_core(self):
         if self.epoch==self.epoch_counter:
             self.epoch_counter+=1
-            if self.experiment=="random_left_right":
+            if self.collision_measure!=0:
                 #print("update core!!")
                 result=testing_model.test(self.generator,50000,self.noise_dim, self.continuous_dim)
-                serializers.save_npz("results/models/tmp/"+str(self.epoch_counter-1)+"_gen.model",self.generator)
                 reporter.report({'lin_ratio': result[0]})
                 reporter.report({'infogan_ratio': result[1]})
                 reporter.report({'diff_ratio': result[2]})
@@ -108,7 +109,8 @@ class GANUpdater(training.StandardUpdater):
                 f.close()
                 
             pass
-
+        serializers.save_npz(self.saving_directory+"/"+str(self.epoch_counter-1)+"_gen.model",self.generator)
+        
         y_fake, mi, y_real = self.forward()
         losses = self.backward(y_fake, mi, y_real)
         self.update_params(losses, report=True)

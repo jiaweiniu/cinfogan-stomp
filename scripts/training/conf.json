@@ -1,7 +1,7 @@
 {
     "experiment": "random_left_right",
-    "n_data": 20000,
-    "n_epochs": 5,
+    "n_data": 100000,
+    "n_epochs": 200,
     "n_categorical": 0,
     "n_continuous": 2,
     "n_batchsize": 135,
@@ -12,5 +12,6 @@
     "n_z": 60,
     "dataset_path": "../../data/rrtconnect",
     "output_name": "",
-    "gpu": -1
+    "gpu": -1,
+    "collision_measure":0
 }
