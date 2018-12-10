@@ -5,7 +5,7 @@
     "n_categorical": 0,
     "n_continuous": 2,
     "n_batchsize": 135,
-    "n_neurons_gen": 100,
+    "n_neurons_gen": 70,
     "n_neurons_dis": 30,
     "wasserstein": false,
     "n_neurons_cri": 50,

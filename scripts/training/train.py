@@ -134,5 +134,5 @@ if __name__ == '__main__':
     with open(os.path.join("conf.json")) as fd:
         json_data = json.load(fd)
     configuration=json_data
-    training(configuration)
+    training(configuration,0)
     
