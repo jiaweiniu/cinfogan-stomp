@@ -4,14 +4,19 @@ import argparse
 from chainer import Variable,datasets, training, iterators, optimizers, serializers
 from chainer.training import updater, extensions, Trainer
 from iterators import RandomNoiseIterator, UniformNoiseGenerator
+# Cinfogan
 from models import Generator, Discriminator, Critic
 from updaters import GANUpdater, WassersteinGANUpdater
+# Cgan
+from cgan_models import Cgan_Generator, Cgan_Discriminator, Cgan_Critic
+from cgan_updaters import Cgan_GANUpdater, Cgan_WassersteinGANUpdater
+
 from extensions import GeneratorSample, saving_model
 import numpy as np
 import import_dataset
 
 iterators.RandomNoiseIterator = RandomNoiseIterator
-updater.GANUpdater = GANUpdater
+updater.GANUpdater = Cgan_GANUpdater
 extensions.GeneratorSample = GeneratorSample
 
 
@@ -46,9 +51,9 @@ def training(configuration, i):
 
     # Creating the Neural Networks models
 
-    gen = Generator(n_z, x_dim, xi_dim, n_continuous, n_neurons_gen)
-    dis = Discriminator(x_dim, xi_dim, n_continuous, n_neurons_dis)
-    critic=Critic(x_dim, xi_dim, n_neurons_cri)
+    gen = Cgan_Generator(n_z, x_dim, xi_dim, n_neurons_gen)
+    dis = Cgan_Discriminator(x_dim, xi_dim, n_neurons_dis)
+    critic=Cgan_Critic(x_dim, xi_dim, n_neurons_cri)
 
     if configuration["wasserstein"]:
         print("Using Wasserstein")
@@ -81,11 +86,10 @@ def training(configuration, i):
         optimizer_generator.setup(gen)
         optimizer_discriminator.setup(dis)
 
-        updater = GANUpdater(
+        updater = Cgan_GANUpdater(
             iterator=train_iter,
             noise_iterator=z_iter,
             noise_dim=n_z,
-            continuous_dim = n_continuous,
             x_dim=x_dim,
             xi_dim=xi_dim,
             experiment=configuration["experiment"],
@@ -105,10 +109,10 @@ def training(configuration, i):
     
     if configuration["wasserstein"]:        
         print_report_args = ['epoch', 'gen/loss', 'cri/loss',
-                             'lin_ratio','infogan_ratio','diff_ratio']
+                             'lin_ratio','cgan_ratio','diff_ratio']
     else:
         print_report_args = ['epoch', 'gen/loss', 'dis/loss',
-                             'lin_ratio','infogan_ratio','diff_ratio']
+                             'lin_ratio','cgan_ratio','diff_ratio']
 
 
     trainer.extend(extensions.PrintReport(print_report_args))
