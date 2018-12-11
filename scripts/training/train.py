@@ -55,10 +55,12 @@ def training(configuration, i):
         gen = Generator(n_z, x_dim, xi_dim, n_continuous, n_neurons_gen)
         dis = Discriminator(x_dim, xi_dim, n_continuous, n_neurons_dis)
         critic=Critic(x_dim, xi_dim, n_neurons_cri)
+        saving_directory="results/models/cinfogan_models_"+str(i)
     else:
         gen = Cgan_Generator(n_z, x_dim, xi_dim, n_neurons_gen)
         dis = Cgan_Discriminator(x_dim, xi_dim, n_neurons_dis)
         critic=Cgan_Critic(x_dim, xi_dim, n_neurons_cri)
+        saving_directory="results/models/cgan_models_"+str(i)
         
     if configuration["wasserstein"]:
         print("Using Wasserstein")
@@ -103,7 +105,7 @@ def training(configuration, i):
                 optimizer_generator=optimizer_generator,
                 optimizer_discriminator=optimizer_discriminator,
                 collision_measure=configuration["collision_measure"],
-                saving_directory="results/models_"+str(i),
+                saving_directory=saving_directory,
                 device=gpu
             )
         else:
@@ -117,14 +119,20 @@ def training(configuration, i):
                 optimizer_generator=optimizer_generator,
                 optimizer_discriminator=optimizer_discriminator,
                 collision_measure=configuration["collision_measure"],
-                saving_directory="results/models_"+str(i),
+                saving_directory=saving_directory,
                 device=gpu
             )
 
     print("setup trainer...")
     trainer = Trainer(updater, stop_trigger=(epochs, 'epoch'))
-    
-    trainer.out="results/models_"+str(i) # changing the name because we do multiple experiments
+
+    # changing the name because we do multiple experiments
+    if configuration["cinfogan"]:
+        trainer.out="results/models/cinfogan_models_"+str(i)
+    else:
+        trainer.out="results/models/cgan_models_"+str(i)
+
+        
     trainer.extend(extensions.LogReport())
 
     
