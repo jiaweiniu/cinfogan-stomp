@@ -2,8 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from scipy import interpolate
-from cgan_models import Cgan_Generator   # cgan model
-from models import Generator             # infogan model
+from models import Generator            
 from chainer import serializers, Variable, reporter
 
 import import_dataset
@@ -104,8 +103,8 @@ def test(gen_infogan,gen_cgan,n_tests,n_z_infogan, n_z_cgan, n_continuous):
 if __name__ == '__main__':
     for i in range(10):
         for n in range(200):
-            gen_infogan=Generator(60, 12, 6, 2, 70)
-            gen_cgan=Cgan_Generator(62, 12, 6, 70)
+            gen_infogan=Generator(62, 12, 6, 70)
+            gen_cgan=Generator(62, 12, 6, 70)
             serializers.load_npz("cinfogan_results/models_"+str(i)+"/"+str(n)+"_gen.model", gen_infogan)
             serializers.load_npz("cgan_results/models_"+str(i)+"/"+str(n)+"_gen.model", gen_cgan)
             result = (test(gen_infogan,gen_cgan,20000,60,62,2))
