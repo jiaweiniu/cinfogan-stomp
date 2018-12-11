@@ -51,10 +51,15 @@ def training(configuration, i):
 
     # Creating the Neural Networks models
 
-    gen = Cgan_Generator(n_z, x_dim, xi_dim, n_neurons_gen)
-    dis = Cgan_Discriminator(x_dim, xi_dim, n_neurons_dis)
-    critic=Cgan_Critic(x_dim, xi_dim, n_neurons_cri)
-
+    if(configuration["cinfogan"]):
+        gen = Generator(n_z, x_dim, xi_dim, n_continuous, n_neurons_gen)
+        dis = Discriminator(x_dim, xi_dim, n_continuous, n_neurons_dis)
+        critic=Critic(x_dim, xi_dim, n_neurons_cri)
+    else:
+        gen = Cgan_Generator(n_z, x_dim, xi_dim, n_neurons_gen)
+        dis = Cgan_Discriminator(x_dim, xi_dim, n_neurons_dis)
+        critic=Cgan_Critic(x_dim, xi_dim, n_neurons_cri)
+        
     if configuration["wasserstein"]:
         print("Using Wasserstein")
         optimizer_generator = optimizers.RMSprop(lr=0.00005)
@@ -86,19 +91,35 @@ def training(configuration, i):
         optimizer_generator.setup(gen)
         optimizer_discriminator.setup(dis)
 
-        updater = Cgan_GANUpdater(
-            iterator=train_iter,
-            noise_iterator=z_iter,
-            noise_dim=n_z,
-            x_dim=x_dim,
-            xi_dim=xi_dim,
-            experiment=configuration["experiment"],
-            optimizer_generator=optimizer_generator,
-            optimizer_discriminator=optimizer_discriminator,
-            collision_measure=configuration["collision_measure"],
-            saving_directory="results/models_"+str(i),
-            device=gpu
-        )
+        if configuration["cinfogan"]:
+            updater = GANUpdater(
+                iterator=train_iter,
+                noise_iterator=z_iter,
+                noise_dim=n_z,
+                continuous_dim = n_continuous,
+                x_dim=x_dim,
+                xi_dim=xi_dim,
+                experiment=configuration["experiment"],
+                optimizer_generator=optimizer_generator,
+                optimizer_discriminator=optimizer_discriminator,
+                collision_measure=configuration["collision_measure"],
+                saving_directory="results/models_"+str(i),
+                device=gpu
+            )
+        else:
+            updater = Cgan_GANUpdater(
+                iterator=train_iter,
+                noise_iterator=z_iter,
+                noise_dim=n_z,
+                x_dim=x_dim,
+                xi_dim=xi_dim,
+                experiment=configuration["experiment"],
+                optimizer_generator=optimizer_generator,
+                optimizer_discriminator=optimizer_discriminator,
+                collision_measure=configuration["collision_measure"],
+                saving_directory="results/models_"+str(i),
+                device=gpu
+            )
 
     print("setup trainer...")
     trainer = Trainer(updater, stop_trigger=(epochs, 'epoch'))

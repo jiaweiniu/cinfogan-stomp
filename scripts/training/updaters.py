@@ -78,10 +78,6 @@ class GANUpdater(training.StandardUpdater):
         continuous_loss = F.gaussian_nll(mi, Variable(c_continuous), Variable(mi_continuous_ln_var))
         continuous_loss /= mi.shape[0]
 
-        #print("continuous_loss:")
-        #print(continuous_loss)
-
-        #generator_loss += categorical_loss
         generator_loss += continuous_loss
 
         return {'gen': generator_loss, 'dis': discriminator_loss}
