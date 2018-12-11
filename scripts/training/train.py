@@ -19,7 +19,7 @@ updater.GANUpdater = Cgan_GANUpdater
 extensions.GeneratorSample = GeneratorSample
 
 
-def training(configuration, i):
+def training(configuration, i, verbose=False):
     #setting parameters
     batch_size = configuration["n_batchsize"]
     epochs     = configuration["n_epochs"]
@@ -42,7 +42,8 @@ def training(configuration, i):
         x_dim=14
         xi_dim=7
 
-    print("Loading data")
+    if verbose:
+        print("Loading data")
     train = import_dataset.import_data(configuration, x_dim, xi_dim)
     train_iter = iterators.SerialIterator(train, batch_size)
 
@@ -60,7 +61,8 @@ def training(configuration, i):
         saving_directory="results/models/cgan_models_"+str(i)
         
     if configuration["wasserstein"]:
-        print("Using Wasserstein")
+        if verbose:
+            print("Using Wasserstein")
         optimizer_generator = optimizers.RMSprop(lr=0.00005)
         optimizer_critic = optimizers.RMSprop(lr=0.00005)
 
@@ -83,7 +85,8 @@ def training(configuration, i):
             device=gpu,
         )
     else:
-        print("Not using Wasserstein")
+        if verbose:
+            print("Not using Wasserstein")
         optimizer_generator = optimizers.Adam()
         optimizer_discriminator = optimizers.SGD()
         
@@ -120,7 +123,8 @@ def training(configuration, i):
                 device=gpu
             )
 
-    print("setup trainer...")
+    if verbose:
+        print("setup trainer...")
     trainer = Trainer(updater, stop_trigger=(epochs, 'epoch'))
 
     # changing the name because we do multiple experiments
@@ -141,8 +145,9 @@ def training(configuration, i):
                              'lin_ratio','cgan_ratio','diff_ratio']
 
 
-    trainer.extend(extensions.PrintReport(print_report_args))
-    trainer.extend(extensions.ProgressBar())
+    if verbose:
+        trainer.extend(extensions.PrintReport(print_report_args))
+        trainer.extend(extensions.ProgressBar())
     if configuration["collision_measure"] != 0:
         trainer.extend(extensions.GeneratorSample(configuration, x_dim,                                                xi_dim, n_continuous, n_z, train), trigger=(1, 'epoch'))
 
@@ -151,7 +156,8 @@ def training(configuration, i):
     cmd = "touch results/f_metric.dat && rm results/f_metric.dat"
     os.system(cmd)
 
-    print("START TRAINING!!")
+    if verbose:
+        print("START TRAINING!!")
     trainer.run()
 
     if configuration["output_name"] != "":
