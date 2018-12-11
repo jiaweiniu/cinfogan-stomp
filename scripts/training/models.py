@@ -4,13 +4,11 @@ from chainer import functions as F
 from chainer import links as L
 
 class Generator(Chain):
-    def __init__(self, n_z, x_dim, xi_dim, n_continuous, n_neurons_gen):
+    def __init__(self, n_z, x_dim, xi_dim, n_neurons_gen):
         super(Generator, self).__init__(
-            l1=L.Linear(x_dim+n_z+n_continuous, n_neurons_gen),
+            l1=L.Linear(x_dim+n_z, n_neurons_gen),
             l2=L.Linear(None, n_neurons_gen),
             l3=L.Linear(None, xi_dim),
-            bn_l1=L.BatchNormalization(n_neurons_gen),
-            bn_l2=L.BatchNormalization(n_neurons_gen),
         )
         
     def __call__(self, z, y):
@@ -27,16 +25,18 @@ class Generator(Chain):
 
 
 class Discriminator(Chain):
-    def __init__(self, x_dim, xi_dim, n_continuous, n_neurons_dis):
+    def __init__(self, x_dim, xi_dim, n_neurons_dis, cinfogan=False, n_continuous=0):
         super(Discriminator, self).__init__(
             l1=L.Linear(x_dim+xi_dim, n_neurons_dis),
             l2=L.Linear(None, n_neurons_dis),
             fc_d=L.Linear(None, 2),
-            fc_mi1=L.Linear(n_neurons_dis, n_neurons_dis),
-
-            fc_mi1_bn=L.BatchNormalization(n_neurons_dis),
-            fc_mi2=L.Linear(n_neurons_dis, n_continuous)
         )
+        self.cinfogan=cinfogan
+
+        if self.cinfogan:
+            self.fc_mi1=L.Linear(n_neurons_dis, n_neurons_dis)
+            self.fc_mi1_bn=L.BatchNormalization(n_neurons_dis)
+            self.fc_mi2=L.Linear(n_neurons_dis, n_continuous)
 
     def __call__(self, x, y):
         h = F.concat([x,y])
@@ -45,11 +45,14 @@ class Discriminator(Chain):
         # Real/Fake prediction
         d = self.fc_d(h)
 
-        # Mutual information reconstruction
-        mi = F.leaky_relu(self.fc_mi1_bn(self.fc_mi1(h)), slope=0.1)
-        mi = self.fc_mi2(mi)
+        if self.cinfogan:
+            # Mutual information reconstruction
+            mi = F.leaky_relu(self.fc_mi1_bn(self.fc_mi1(h)), slope=0.1)
+            mi = self.fc_mi2(mi)
+            return d, mi
 
-        return d, mi
+        else:
+            return d
 
 class Critic(Chain):
     def __init__(self, x_dim, xi_dim, n_neurons_cri):

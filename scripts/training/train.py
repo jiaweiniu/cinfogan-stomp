@@ -50,16 +50,14 @@ def training(configuration, i):
     z_iter = iterators.RandomNoiseIterator(UniformNoiseGenerator(-1, 1, n_z+n_continuous), batch_size)
 
     # Creating the Neural Networks models
+    gen = Generator(n_z+n_continuous, x_dim, xi_dim, n_neurons_gen)
+    dis = Discriminator(x_dim, xi_dim, n_neurons_dis,
+                        cinfogan=configuration["cinfogan"], n_continuous=n_continuous)
+    critic=Critic(x_dim, xi_dim, n_neurons_cri)
 
     if(configuration["cinfogan"]):
-        gen = Generator(n_z, x_dim, xi_dim, n_continuous, n_neurons_gen)
-        dis = Discriminator(x_dim, xi_dim, n_continuous, n_neurons_dis)
-        critic=Critic(x_dim, xi_dim, n_neurons_cri)
         saving_directory="results/models/cinfogan_models_"+str(i)
     else:
-        gen = Cgan_Generator(n_z, x_dim, xi_dim, n_neurons_gen)
-        dis = Cgan_Discriminator(x_dim, xi_dim, n_neurons_dis)
-        critic=Cgan_Critic(x_dim, xi_dim, n_neurons_cri)
         saving_directory="results/models/cgan_models_"+str(i)
         
     if configuration["wasserstein"]:
