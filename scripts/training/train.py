@@ -4,14 +4,19 @@ import argparse
 from chainer import Variable,datasets, training, iterators, optimizers, serializers
 from chainer.training import updater, extensions, Trainer
 from iterators import RandomNoiseIterator, UniformNoiseGenerator
+# Cinfogan
 from models import Generator, Discriminator, Critic
 from updaters import GANUpdater, WassersteinGANUpdater
+# Cgan
+from cgan_models import Cgan_Generator, Cgan_Discriminator, Cgan_Critic
+from cgan_updaters import Cgan_GANUpdater, Cgan_WassersteinGANUpdater
+
 from extensions import GeneratorSample, saving_model
 import numpy as np
 import import_dataset
 
 iterators.RandomNoiseIterator = RandomNoiseIterator
-updater.GANUpdater = GANUpdater
+updater.GANUpdater = Cgan_GANUpdater
 extensions.GeneratorSample = GeneratorSample
 
 
@@ -45,11 +50,16 @@ def training(configuration, i):
     z_iter = iterators.RandomNoiseIterator(UniformNoiseGenerator(-1, 1, n_z+n_continuous), batch_size)
 
     # Creating the Neural Networks models
-
-    gen = Generator(n_z, x_dim, xi_dim, n_continuous, n_neurons_gen)
-    dis = Discriminator(x_dim, xi_dim, n_continuous, n_neurons_dis)
+    gen = Generator(n_z+n_continuous, x_dim, xi_dim, n_neurons_gen)
+    dis = Discriminator(x_dim, xi_dim, n_neurons_dis,
+                        cinfogan=configuration["cinfogan"], n_continuous=n_continuous)
     critic=Critic(x_dim, xi_dim, n_neurons_cri)
 
+    if(configuration["cinfogan"]):
+        saving_directory="results/models/cinfogan_models_"+str(i)
+    else:
+        saving_directory="results/models/cgan_models_"+str(i)
+        
     if configuration["wasserstein"]:
         print("Using Wasserstein")
         optimizer_generator = optimizers.RMSprop(lr=0.00005)
@@ -81,34 +91,55 @@ def training(configuration, i):
         optimizer_generator.setup(gen)
         optimizer_discriminator.setup(dis)
 
-        updater = GANUpdater(
-            iterator=train_iter,
-            noise_iterator=z_iter,
-            noise_dim=n_z,
-            continuous_dim = n_continuous,
-            x_dim=x_dim,
-            xi_dim=xi_dim,
-            experiment=configuration["experiment"],
-            optimizer_generator=optimizer_generator,
-            optimizer_discriminator=optimizer_discriminator,
-            collision_measure=configuration["collision_measure"],
-            saving_directory="results/models_"+str(i),
-            device=gpu
-        )
+        if configuration["cinfogan"]:
+            updater = GANUpdater(
+                iterator=train_iter,
+                noise_iterator=z_iter,
+                noise_dim=n_z,
+                continuous_dim = n_continuous,
+                x_dim=x_dim,
+                xi_dim=xi_dim,
+                experiment=configuration["experiment"],
+                optimizer_generator=optimizer_generator,
+                optimizer_discriminator=optimizer_discriminator,
+                collision_measure=configuration["collision_measure"],
+                saving_directory=saving_directory,
+                device=gpu
+            )
+        else:
+            updater = Cgan_GANUpdater(
+                iterator=train_iter,
+                noise_iterator=z_iter,
+                noise_dim=n_z,
+                x_dim=x_dim,
+                xi_dim=xi_dim,
+                experiment=configuration["experiment"],
+                optimizer_generator=optimizer_generator,
+                optimizer_discriminator=optimizer_discriminator,
+                collision_measure=configuration["collision_measure"],
+                saving_directory=saving_directory,
+                device=gpu
+            )
 
     print("setup trainer...")
     trainer = Trainer(updater, stop_trigger=(epochs, 'epoch'))
-    
-    trainer.out="results/models_"+str(i) # changing the name because we do multiple experiments
+
+    # changing the name because we do multiple experiments
+    if configuration["cinfogan"]:
+        trainer.out="results/models/cinfogan_models_"+str(i)
+    else:
+        trainer.out="results/models/cgan_models_"+str(i)
+
+        
     trainer.extend(extensions.LogReport())
 
     
     if configuration["wasserstein"]:        
         print_report_args = ['epoch', 'gen/loss', 'cri/loss',
-                             'lin_ratio','infogan_ratio','diff_ratio']
+                             'lin_ratio','cgan_ratio','diff_ratio']
     else:
         print_report_args = ['epoch', 'gen/loss', 'dis/loss',
-                             'lin_ratio','infogan_ratio','diff_ratio']
+                             'lin_ratio','cgan_ratio','diff_ratio']
 
 
     trainer.extend(extensions.PrintReport(print_report_args))

@@ -7,6 +7,12 @@ if __name__ == '__main__':
         json_data = json.load(fd)
     configuration=json_data
 
+    # CGAN training
+    configuration["cinfogan"]=False 
     for i in range(10):
         train.training(configuration,i)
-    
+
+    # CInfoGan training 
+    configuration["cinfogan"]=True 
+    for i in range(10):
+        train.training(configuration,i)
