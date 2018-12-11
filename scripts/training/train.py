@@ -8,7 +8,6 @@ from iterators import RandomNoiseIterator, UniformNoiseGenerator
 from models import Generator, Discriminator, Critic
 from updaters import GANUpdater, WassersteinGANUpdater
 # Cgan
-from cgan_models import Cgan_Generator, Cgan_Discriminator, Cgan_Critic
 from cgan_updaters import Cgan_GANUpdater, Cgan_WassersteinGANUpdater
 
 from extensions import GeneratorSample, saving_model
