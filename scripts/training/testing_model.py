@@ -105,8 +105,8 @@ if __name__ == '__main__':
         for n in range(200):
             gen_infogan=Generator(62, 12, 6, 70)
             gen_cgan=Generator(62, 12, 6, 70)
-            serializers.load_npz("cinfogan_results/models_"+str(i)+"/"+str(n)+"_gen.model", gen_infogan)
-            serializers.load_npz("cgan_results/models_"+str(i)+"/"+str(n)+"_gen.model", gen_cgan)
+            serializers.load_npz("results/models/cinfogan_models_"+str(i)+"/"+str(n)+"_gen.model", gen_infogan)
+            serializers.load_npz("results/models/cgan_models_"+str(i)+"/"+str(n)+"_gen.model", gen_cgan)
             result = (test(gen_infogan,gen_cgan,20000,60,62,2))
             print(result)
             f=open('results/f_metric.dat','a')
