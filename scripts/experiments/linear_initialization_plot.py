@@ -18,9 +18,9 @@ theta_x=[t*q_goal[0]+(1-t)*q_start[0]]
 theta_y=[t*q_goal[1]+(1-t)*q_start[1]]
 theta=np.concatenate((theta_x,theta_y),axis=0)   # initial trajectory
     
-print "Initial trajectory"
+print ("Initial trajectory")
 print
-print theta
+print (theta)
 print
 
 
