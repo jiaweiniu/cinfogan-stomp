@@ -9,9 +9,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 from chainer import serializers
-from models import CInfoGAN_Generator
-from cgan_model import Cgan_Generator
-
+from models import Generator
 '''
    plot computing time that linear, cgan, cinfogan as initial trajectory 
 '''
@@ -40,16 +38,16 @@ if __name__ == '__main__':
     for i in range(n_timesteps):
         M[:,i]=R_inv[:,i]/(n_timesteps*max(R_inv[:,i]))
 
-    cinfogan_gen = CInfoGAN_Generator(60,12,6,2,100)
-    serializers.load_npz("../results/models/40.model",cinfogan_gen)
+    cinfogan_gen = Generator(62, 12, 6, 70)
+    serializers.load_npz("../training/results/models/cinfogan_models_0/40_gen.model",cinfogan_gen)
 
-    cgan_gen = Cgan_Generator(12, 6, 20, 108)
-    serializers.load_npz("../../cgan/results/models/20.model",cgan_gen)
+    cgan_gen = Generator(62, 12, 6, 70)
+    serializers.load_npz("../training/results/models/cgan_models_0/20_gen.model",cgan_gen)
         
     record_list_ξ = False
     verbose=False
     data=[]
-    n_experiments = 500
+    n_experiments = 20
     #--- Problem x definition ---#
     for i in tqdm(range(n_experiments)):
         radius=0.1

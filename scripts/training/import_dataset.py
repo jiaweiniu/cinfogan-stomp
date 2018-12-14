@@ -11,7 +11,7 @@ def import_data(configuration, x_dim, xi_dim):
     for m in tqdm(range(n_data)): 
         f=open(configuration["dataset_path"]+"/path_"+str(m+1)+".dat",'r')
 
-        # x
+        # x : problem
         x=np.zeros(x_dim)
         str_tmp=str.split(f.readline().strip())        
         for i in range(x_dim):
@@ -19,7 +19,7 @@ def import_data(configuration, x_dim, xi_dim):
         x=normalize_data(configuration["experiment"],x)
         dataset[m,:x_dim]=x
         
-        # xi
+        # xi : trajectory
         str_tmp=str.split(f.readline().strip())
         for i in range(xi_dim):
             dataset[m,i+x_dim]=float(str_tmp[i])
@@ -57,7 +57,7 @@ def normalize_data_random_left_right(x):
     x[11]=(x[11]-0.02)/(0.98-0.02)
 
     return x
-
+'''
 def denormalize_data_random_left_right(x):
     x[0]=x[0]*(0.15-0.02)+0.02
     x[1]=x[1]*(0.98-0.02)+0.02
@@ -69,6 +69,19 @@ def denormalize_data_random_left_right(x):
         x[2*i+5]=x[2*i+5]*(0.98-0.02)+0.02
         
     return x
+'''
+def denormalize_data_random_left_right(x):
+    x[0]=x[0]*0.09+0.11
+    x[1]=x[1]*0.09+0.11
+    x[2]=x[2]*0.09+0.8
+    x[3]=x[3]*0.09+0.8
+
+    for i in range(4):
+        x[2*i+4]=x[2*i+4]*0.6+0.2
+        x[2*i+5]=x[2*i+5]*0.8+0.1
+        
+    return x
+
 
 def normalize_data_table(x):
     return x
