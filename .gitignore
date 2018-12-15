@@ -12,3 +12,4 @@ virtualenv/*
 scripts/conf.json
 scripts/training/results/*
 data/rrtconnect/*
+data/trained_models/*
