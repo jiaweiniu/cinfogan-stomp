@@ -1,3 +1,7 @@
+# We use this to import testing_model from the experiments folder
+import sys
+sys.path.insert(0,'../experiments/')
+
 import numpy as np
 import chainer
 from chainer import training, reporter, serializers
