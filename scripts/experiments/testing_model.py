@@ -39,7 +39,7 @@ def collisions_measure(x_list,cgan_xi_pred_list,infogan_xi_pred_list):
         goal=np.asarray([x[2:4]])  # give the position of goal
        
         # linear initialization
-        lin=np.dot(1-np.transpose(t),start)+np.dot(np.transpose(t),goal)  # zhuan(3)zhi(4)
+        lin=np.dot(1-np.transpose(t),start)+np.dot(np.transpose(t),goal)  # transpose
 
         # infogan initialization
         t_xi=[0,0.333,0.5,0.644,1]
@@ -49,7 +49,7 @@ def collisions_measure(x_list,cgan_xi_pred_list,infogan_xi_pred_list):
                                 [infogan_xi_pred[4],infogan_xi_pred[5]],
                                 [goal[0][0],goal[0][1]]])     # become an array
         
-        spline,u=interpolate.splprep([before_spline[:,0],before_spline[:,1]],u=t_xi)  # cha(1)zhi(2)
+        spline,u=interpolate.splprep([before_spline[:,0],before_spline[:,1]],u=t_xi)  # interpolation
     
         infogan=interpolate.splev(t,spline)
         infogan=np.concatenate((np.transpose(infogan[0]),np.transpose(infogan[1])),axis=1)
@@ -67,7 +67,7 @@ def collisions_measure(x_list,cgan_xi_pred_list,infogan_xi_pred_list):
                                 [cgan_xi_pred[4],cgan_xi_pred[5]],
                                 [goal[0][0],goal[0][1]]])     # become an array
         
-        spline,u=interpolate.splprep([before_spline[:,0],before_spline[:,1]],u=t_xi)  # cha(1)zhi(2)
+        spline,u=interpolate.splprep([before_spline[:,0],before_spline[:,1]],u=t_xi)  # interpolation
     
         cgan=interpolate.splev(t,spline)
         cgan=np.concatenate((np.transpose(cgan[0]),np.transpose(cgan[1])),axis=1)
