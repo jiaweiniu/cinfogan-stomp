@@ -1,9 +1,14 @@
+# We use this to import models from the training folder
+import sys
+sys.path.insert(0, '../training/')
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from scipy import interpolate
 from models import Generator            
 from chainer import serializers, Variable, reporter
+from tqdm import tqdm
 
 import import_dataset
 import rustmetric
@@ -84,7 +89,7 @@ def collisions_measure(x_list,cgan_xi_pred_list,infogan_xi_pred_list):
     return [f1_lin, f1_cgan, f1_infogan]
             
 def test(gen_infogan,gen_cgan,n_tests,n_z_infogan, n_z_cgan, n_continuous):
-    # infogan
+    # cinfogan
     z_infogan = np.random.uniform(-2, 2, (n_tests, n_z_infogan+n_continuous))
     z_infogan = Variable(np.array(z_infogan, dtype=np.float32))
 
@@ -101,15 +106,14 @@ def test(gen_infogan,gen_cgan,n_tests,n_z_infogan, n_z_cgan, n_continuous):
     
 
 if __name__ == '__main__':
-    for i in range(10):
-        for n in range(200):
+    for i in tqdm(range(10)):
+        for n in tqdm(range(200)):
             gen_infogan=Generator(62, 12, 6, 70)
             gen_cgan=Generator(62, 12, 6, 70)
-            serializers.load_npz("results/models/cinfogan_models_"+str(i)+"/"+str(n)+"_gen.model", gen_infogan)
-            serializers.load_npz("results/models/cgan_models_"+str(i)+"/"+str(n)+"_gen.model", gen_cgan)
-            result = (test(gen_infogan,gen_cgan,20000,60,62,2))
-            print(result)
-            f=open('results/f_metric.dat','a')
+            serializers.load_npz("../training/results/models/cinfogan_models_"+str(i)+"/"+str(n)+"_gen.model", gen_infogan)
+            serializers.load_npz("../training/results/models/cgan_models_"+str(i)+"/"+str(n)+"_gen.model", gen_cgan)
+            result = (test(gen_infogan,gen_cgan,200,60,62,2))
+            f=open('../training/results/f_metric.dat','a')
             f.write(str(result[0])+" "+str(result[1])+" "+str(result[2])+"\n")
             f.close()
                     
